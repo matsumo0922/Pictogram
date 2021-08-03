@@ -7,7 +7,6 @@ import android.view.SurfaceHolder
 import android.view.SurfaceView
 import androidx.core.content.ContextCompat
 import caios.android.pictogram.R
-import kotlin.math.min
 
 @SuppressLint("ViewConstructor")
 class PostureSurfaceView(surfaceView: SurfaceView): SurfaceView(surfaceView.context), SurfaceHolder.Callback {
@@ -16,21 +15,6 @@ class PostureSurfaceView(surfaceView: SurfaceView): SurfaceView(surfaceView.cont
     private val paint = Paint()
 
     private val minConfidence = 0.5
-
-    private val bodyJoints = listOf(
-        Pair(BodyPart.LEFT_WRIST, BodyPart.LEFT_ELBOW),
-        Pair(BodyPart.LEFT_ELBOW, BodyPart.LEFT_SHOULDER),
-        Pair(BodyPart.LEFT_SHOULDER, BodyPart.RIGHT_SHOULDER),
-        Pair(BodyPart.RIGHT_SHOULDER, BodyPart.RIGHT_ELBOW),
-        Pair(BodyPart.RIGHT_ELBOW, BodyPart.RIGHT_WRIST),
-        Pair(BodyPart.LEFT_SHOULDER, BodyPart.LEFT_HIP),
-        Pair(BodyPart.LEFT_HIP, BodyPart.RIGHT_HIP),
-        Pair(BodyPart.RIGHT_HIP, BodyPart.RIGHT_SHOULDER),
-        Pair(BodyPart.LEFT_HIP, BodyPart.LEFT_KNEE),
-        Pair(BodyPart.LEFT_KNEE, BodyPart.LEFT_ANKLE),
-        Pair(BodyPart.RIGHT_HIP, BodyPart.RIGHT_KNEE),
-        Pair(BodyPart.RIGHT_KNEE, BodyPart.RIGHT_ANKLE)
-    )
 
     init {
         surfaceHolder.addCallback(this)
@@ -47,23 +31,23 @@ class PostureSurfaceView(surfaceView: SurfaceView): SurfaceView(surfaceView.cont
 
     override fun surfaceDestroyed(holder: SurfaceHolder) = Unit
 
-    fun drawPosture(postureData: PostureData, bitmap: Bitmap, viewSize: Size) {
+    fun drawPosture(postureData: PostureData, bitmap: Bitmap, viewSize: Size, pictogramComparator: PictogramComparator): List<KeyPoint> {
         val canvas: Canvas? = surfaceHolder.lockCanvas()
         val scaleX = viewSize.width.toFloat() / bitmap.width
         val scaleY = viewSize.height.toFloat() / bitmap.height
 
+        val drawKeyPoints = mutableListOf<KeyPoint>()
+
         canvas?.drawColor(0, PorterDuff.Mode.CLEAR)
-        canvas?.drawBitmap(bitmap, null, RectF(0f, 0f, bitmap.width * scaleX , bitmap.height * scaleY), null /*Paint().apply {
-            isFilterBitmap = true
-        }*/)
 
         for (keyPoint in postureData.keyPoints) {
             if (keyPoint.score > minConfidence) {
-                canvas?.drawCircle(keyPoint.position.x * scaleX, keyPoint.position.y * scaleY, 4f, paint)
+                canvas?.drawCircle(keyPoint.position.x * scaleX, keyPoint.position.y * scaleY, 12f, paint)
+                drawKeyPoints.add(KeyPoint(keyPoint.bodyPart, Position((keyPoint.position.x * scaleX).toInt(), (keyPoint.position.y * scaleY).toInt()), keyPoint.score))
             }
         }
 
-        for(line in bodyJoints) {
+        for(line in bodyPartsJoint) {
             val firstPoint = postureData.keyPoints[line.first.ordinal]
             val secondPoint = postureData.keyPoints[line.second.ordinal]
 
@@ -78,11 +62,13 @@ class PostureSurfaceView(surfaceView: SurfaceView): SurfaceView(surfaceView.cont
             }
         }
 
-        surfaceHolder.unlockCanvasAndPost(canvas ?: return)
+        surfaceHolder.unlockCanvasAndPost(canvas ?: return emptyList())
+
+        return drawKeyPoints
     }
 
     private fun setPaint() {
         paint.color = ContextCompat.getColor(context, R.color.colorAccentGreen)
-        paint.strokeWidth = 3f
+        paint.strokeWidth = 12f
     }
 }

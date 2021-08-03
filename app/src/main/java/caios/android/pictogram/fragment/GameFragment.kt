@@ -1,6 +1,8 @@
 package caios.android.pictogram.fragment
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Size
 import android.view.OrientationEventListener
 import android.view.Surface
@@ -15,9 +17,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import caios.android.pictogram.R
-import caios.android.pictogram.analyze.PostureEstimator
-import caios.android.pictogram.analyze.Device
-import caios.android.pictogram.analyze.PostureSurfaceView
+import caios.android.pictogram.analyze.*
 import caios.android.pictogram.databinding.FragmentGameBinding
 import caios.android.pictogram.utils.PermissionUtils
 import caios.android.pictogram.utils.SystemUtils
@@ -31,8 +31,11 @@ import java.util.concurrent.Executors
 class GameFragment: Fragment(R.layout.fragment_game) {
 
     private var binding by autoCleared<FragmentGameBinding>()
+    private val handler = Handler(Looper.myLooper()!!)
 
     private lateinit var postureSurfaceView: PostureSurfaceView
+    private lateinit var pictogramComparator: PictogramComparator
+
     private lateinit var cameraProviderFuture: ListenableFuture<ProcessCameraProvider>
     private lateinit var cameraExecutor: ExecutorService
 
@@ -55,6 +58,7 @@ class GameFragment: Fragment(R.layout.fragment_game) {
         binding = FragmentGameBinding.bind(view)
 
         postureSurfaceView = PostureSurfaceView(binding.surfaceView)
+        pictogramComparator = PictogramComparator(requireContext(), PictogramEvent.ARCHERY)
 
         if(PermissionUtils.isAllowed(requireContext(), PermissionUtils.requestPermissions)) {
             setupCamera()
@@ -96,7 +100,14 @@ class GameFragment: Fragment(R.layout.fragment_game) {
             setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
         }.build().also {
             it.setAnalyzer(cameraExecutor, PostureEstimator(requireContext(), Device.CPU) { posture, bitmap ->
-                postureSurfaceView.drawPosture(posture, bitmap, previewSize)
+                val drawKeyPoint = postureSurfaceView.drawPosture(posture, bitmap, previewSize, pictogramComparator)
+                val score = pictogramComparator.comparate(drawKeyPoint, previewSize)
+
+                if(score <= 1.5f) {
+                    handler.post {
+                        ToastUtils.show(requireContext(), "CLEAR")
+                    }
+                }
             })
         }
 

@@ -14,8 +14,6 @@ object ImageConverter {
 
     // ImageProxy -> Bitmap
     fun imageToToBitmap(image: Image, rotationDegrees: Int): Bitmap {
-        Log.d(TAG, "imageToToBitmap: $rotationDegrees")
-
         val data = imageToByteArray(image)
         val bitmap = BitmapFactory.decodeByteArray(data, 0, data!!.size)
         return cropBitmap(bitmap, Size(MODEL_WIDTH, MODEL_HEIGHT), rotationDegrees)
