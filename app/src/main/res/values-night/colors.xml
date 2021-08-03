@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#212121</color>
+    <color name="colorPrimaryDark">#000000</color>
+
+    <color name="colorAccent">#9575CD</color>
+    <color name="colorAccentBackground">#2C2935</color>
+    <color name="colorAccentTransparent">#759575CD</color>
+
+    <color name="colorPrimaryText">#F2F5F8</color>
+    <color name="colorSecondaryText">#8C9195</color>
+    <color name="colorSecondaryTextTransparent">#33C1C1C1</color>
+
+    <color name="colorPrimaryBackground">#202124</color>
+    <color name="colorSecondaryBackground">#212121</color>
+    <color name="colorDialogBackground">#202124</color>
+    <color name="colorLibraryBackground">#121314</color>
+    <color name="colorDeepBackground">#050607</color>
+    <color name="colorTransparentBackground">#B3303030</color>
+
+    <color name="colorShadowLight">#202124</color>
+
+    <color name="colorIcon">#DADCE0</color>
+    <color name="colorIconSecondary">#5B6064</color>
+    <color name="colorIconDisable">#717275</color>
+
+    <color name="colorMainCircleCroller">#202124</color>
+    <color name="colorBackCircleCroller">#2A2B2E</color>
+
+    <color name="colorDonateBackground">#202124</color>
+    <color name="colorDonateBackground1">#2A2D32</color>
+    <color name="colorDonateBackground2">#2F262E</color>
+    <color name="colorDonateBackground3">#2F2728</color>
+    <color name="colorDonateBackground4">#2A2832</color>
+    <color name="colorDonateBackground5">#2E2C28</color>
+    <color name="colorDonateBackground6">#232C29</color>
+    <color name="colorDonateBackground7">#1F212C</color>
+    <color name="colorDonateBackground8">#23262A</color>
+
+    <color name="colorDonateAccent1">#C2DDF9</color>
+    <color name="colorDonateAccent2">#FF6DB6</color>
+    <color name="colorDonateAccent3">#FF7A63</color>
+    <color name="colorDonateAccent4">#C78FF5</color>
+    <color name="colorDonateAccent5">#FFD36D</color>
+    <color name="colorDonateAccent6">#4AC677</color>
+    <color name="colorDonateAccent7">#7986CB</color>
+    <color name="colorDonateAccent8">#78909C</color>
+
+    <color name="colorAccentRed">#F15B47</color>
+    <color name="colorAccentPink">#D04F97</color>
+    <color name="colorAccentOrange">#FD951E</color>
+    <color name="colorAccentPurple">#9575CD</color>
+    <color name="colorAccentBlue">#414FA3</color>
+    <color name="colorAccentGreen">#9FC24D</color>
+</resources>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="anim_duration_search_transition">400</integer>
+    <integer name="anim_duration_refresh_recycler_view">380</integer>
+    <integer name="anim_duration_fragment_transition">550</integer>
+</resources>

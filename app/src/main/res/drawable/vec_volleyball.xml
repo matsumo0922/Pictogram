@@ -1,0 +1,38 @@
+<vector
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:name="vector"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+    <path
+        android:name="path_8"
+        android:pathData="M 39.802 8.755 C 39.39 8.036 38.473 7.788 37.755 8.196 L 30.884 12.123 L 25.419 13.944 L 12.999 18.37 L 12.999 11.499 C 12.999 10.671 12.327 9.999 11.499 9.999 C 10.671 9.999 9.999 10.671 9.999 11.499 L 9.999 20.499 C 9.999 20.987 10.236 21.444 10.635 21.726 C 10.892 21.907 11.194 21.999 11.499 21.999 C 11.669 21.999 11.84 21.971 12.004 21.912 L 19.644 20.085 C 20.109 21.524 20.355 23.863 19 27 L 16.421 33.628 L 8.941 38.304 C 8.003 38.89 7.719 40.123 8.304 41.06 C 8.684 41.667 9.335 42 10.002 42 C 10.364 42 10.731 41.902 11.06 41.696 L 19.06 36.696 C 19.399 36.484 19.666 36.176 19.828 35.812 L 23 29 C 23 29 22.665 32.086 22.057 36.458 L 19.162 43.212 C 18.726 44.228 19.197 45.403 20.212 45.838 C 20.469 45.948 20.736 46.001 20.999 46.001 C 21.775 46 22.514 45.546 22.838 44.788 L 25.838 37.788 C 25.908 37.625 25.956 37.454 25.981 37.278 C 25.981 37.278 28.001 27.958 28.001 23 C 28.001 22.891 27.674 19.258 27.241 17.852 L 31.975 14.922 C 32.069 14.891 39.245 10.802 39.245 10.802 C 39.963 10.391 40.213 9.474 39.802 8.755 Z"
+        android:fillColor="@color/colorPictogramSkin"
+        android:strokeWidth="1"/>
+    <path
+        android:name="path_9"
+        android:pathData="M 19 27 L 17.72 30.288 L 21.665 31.866 L 23 29 C 23 29 22.876 30.137 22.644 32 L 26.99 32 C 27.26 30.422 27.525 28.671 27.718 27 L 19 27 Z"
+        android:fillColor="@color/colorPictogramBlueGreen"
+        android:strokeWidth="1"/>
+    <path
+        android:name="path_10"
+        android:pathData="M 19.5 6 C 21.433 6 23 7.566 23 9.5 C 23 11.434 21.433 13 19.5 13 C 17.566 13 16 11.434 16 9.5 C 16 7.566 17.566 6 19.5 6"
+        android:fillColor="@color/colorPictogramSkin"
+        android:strokeWidth="1"/>
+    <path
+        android:name="path_11"
+        android:pathData="M 32.5 2 C 34.433 2 36 3.566 36 5.5 C 36 7.434 34.433 9 32.5 9 C 30.566 9 29 7.434 29 5.5 C 29 3.566 30.566 2 32.5 2"
+        android:fillColor="@color/colorPictogramBlueGreenDark"
+        android:strokeWidth="1"/>
+    <path
+        android:name="path_12"
+        android:pathData="M 22.644 32 L 24.583 32 L 25 28 L 23 29 C 23 29 22.876 30.137 22.644 32 Z"
+        android:fillColor="@color/colorPictogramBlueGreenDark"
+        android:strokeWidth="1"/>
+    <path
+        android:name="path_13"
+        android:pathData="M 19 27 L 27.719 27 C 27.897 25.464 27.977 24.011 27.989 23 C 28.029 19.599 27.049 16.86 26.074 15.002 C 25.787 14.422 25.576 14.106 25.42 13.945 L 24.995 14.087 L 17.566 16.74 C 18.13 17.489 18.811 18.415 18.811 18.415 C 18.833 18.443 21.375 21.5 19 27 Z"
+        android:fillColor="@color/colorPictogramOrange"
+        android:strokeWidth="1"/>
+</vector>

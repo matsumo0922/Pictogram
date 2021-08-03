@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Pictogram</string>
+
+    <string name="drawer_open" translatable="false">Navigation Drawer open</string>
+    <string name="drawer_close" translatable="false">Navigation Drawer Close</string>
+
+    <string name="lightTheme">ライトテーマ</string>
+    <string name="darkTheme">ダークテーマ</string>
+    <string name="systemTheme">システムのデフォルト</string>
+    <string name="unknown">不明</string>
+    <string name="startGame">ゲームスタート</string>
+    <string name="explainRule">ルール説明</string>
+    <string name="gameSummary">ピクトグラムになりきってハイスコアを目指そう！！</string>
+    <string name="permissionReject">許可されませんでした</string>
+    <string name="tableTennis">卓球</string>
+    <string name="imitateThe">を真似しろ！</string>
+    <string name="unknownError">不明なエラーが発生しました</string>
+
+</resources>

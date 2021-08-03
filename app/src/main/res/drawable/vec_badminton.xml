@@ -1,0 +1,37 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+  <path
+      android:pathData="M41,18.188c-0.185,-0.806 -0.979,-1.309 -1.798,-1.126l-7.013,1.856l-6.221,-3.949C25.761,14.865 21,14.031 21,14.031L8.129,9.14C7.373,8.79 6.486,9.121 6.138,9.873c-0.347,0.752 -0.019,1.643 0.733,1.99L19,18v18c0,0.163 0.021,0.326 0.06,0.485l2,8c0.228,0.908 1.043,1.516 1.938,1.515c0.161,0 0.324,-0.019 0.487,-0.06c1.071,-0.268 1.723,-1.354 1.455,-2.426L23,35.754l0.408,-3.983l1.694,3.862c0.082,0.245 0.211,0.473 0.379,0.669l6,7C31.877,43.763 32.438,44 33.001,44c0.461,0 0.924,-0.158 1.301,-0.481c0.839,-0.719 0.936,-1.981 0.217,-2.82l-5.745,-6.702L26,26v-6.359l5.329,2.201C31.539,21.946 31.769,22 32,22c0.112,0 0.225,-0.013 0.336,-0.038l7.538,-1.977C40.682,19.8 41.186,18.995 41,18.188z"
+      android:fillColor="@color/colorPictogramSkin"/>
+  <path
+      android:pathData="M23.5,5C25.433,5 27,6.567 27,8.5c0,1.932 -1.567,3.5 -3.5,3.5S20,10.432 20,8.5C20,6.567 21.567,5 23.5,5"
+      android:fillColor="@color/colorPictogramSkin"/>
+  <path
+      android:pathData="M19,36l0,-10l5,0l-1,10z"
+      android:fillColor="@color/colorPictogramOrangeDark"/>
+  <path
+      android:pathData="M37.47,5.829c0.94,2.112 0.596,4.348 -0.768,4.995c-1.364,0.647 -3.232,-0.541 -4.172,-2.652c-0.94,-2.112 -0.596,-4.348 0.768,-4.995C34.662,2.53 36.53,3.717 37.47,5.829z"
+      android:strokeWidth="2"
+      android:fillColor="#00000000"
+      android:strokeColor="@color/colorPictogramOrange"/>
+  <path
+      android:pathData="M37.001,11.189L41.125,19.438"
+      android:strokeWidth="2"
+      android:fillColor="#00000000"
+      android:strokeColor="@color/colorPictogramOrange"/>
+  <path
+      android:pathData="M8,3l0,2l4,1l0,-4z"
+      android:fillColor="@color/colorPictogramWhiteDark"/>
+  <path
+      android:pathData="M8,4m-1,0a1,1 0,1 1,2 0a1,1 0,1 1,-2 0"
+      android:fillColor="@color/colorPictogramGrayDark"/>
+  <path
+      android:pathData="M25.969,14.969C25.761,14.865 21,14.031 21,14.031l-2,-0.76V26h7V14.989L25.969,14.969z"
+      android:fillColor="@color/colorPictogramBlue"/>
+  <path
+      android:pathData="M19,26l3,3l3.103,6.633l3.67,-1.637l-2.773,-7.996z"
+      android:fillColor="@color/colorPictogramOrange"/>
+</vector>

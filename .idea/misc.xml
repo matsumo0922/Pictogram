@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Android/Android-Project/Pictogram/app/src/main/res/drawable/ic_tennis.xml" value="0.4161458333333333" />
+        <entry key="..\:/Android/Android-Project/Pictogram/app/src/main/res/drawable/shape_circle_background.xml" value="0.4161458333333333" />
+        <entry key="..\:/Android/Android-Project/Pictogram/app/src/main/res/drawable/vec_archery.xml" value="0.4161458333333333" />
+        <entry key="..\:/Android/Android-Project/Pictogram/app/src/main/res/drawable/vec_athletics.xml" value="0.4161458333333333" />
+        <entry key="..\:/Android/Android-Project/Pictogram/app/src/main/res/drawable/vec_badminton.xml" value="0.4161458333333333" />
+        <entry key="..\:/Android/Android-Project/Pictogram/app/src/main/res/drawable/vec_basketball.xml" value="0.4161458333333333" />
+        <entry key="..\:/Android/Android-Project/Pictogram/app/src/main/res/drawable/vec_beach_volleyball.xml" value="0.4161458333333333" />
+        <entry key="..\:/Android/Android-Project/Pictogram/app/src/main/res/drawable/vec_boxing.xml" value="0.4161458333333333" />
+        <entry key="..\:/Android/Android-Project/Pictogram/app/src/main/res/drawable/vec_cycling_road.xml" value="0.4161458333333333" />
+        <entry key="..\:/Android/Android-Project/Pictogram/app/src/main/res/drawable/vec_diving.xml" value="0.4161458333333333" />
+        <entry key="..\:/Android/Android-Project/Pictogram/app/src/main/res/drawable/vec_fencing.xml" value="0.4161458333333333" />
+        <entry key="..\:/Android/Android-Project/Pictogram/app/src/main/res/drawable/vec_football.xml" value="0.4161458333333333" />
+        <entry key="..\:/Android/Android-Project/Pictogram/app/src/main/res/drawable/vec_golf.xml" value="0.4161458333333333" />
+        <entry key="..\:/Android/Android-Project/Pictogram/app/src/main/res/drawable/vec_handball.xml" value="0.4161458333333333" />
+        <entry key="..\:/Android/Android-Project/Pictogram/app/src/main/res/drawable/vec_hockey.xml" value="0.4161458333333333" />
+        <entry key="..\:/Android/Android-Project/Pictogram/app/src/main/res/drawable/vec_rhythmic_gymnastics.xml" value="0.4161458333333333" />
+        <entry key="..\:/Android/Android-Project/Pictogram/app/src/main/res/drawable/vec_rugby_sevens.xml" value="0.4161458333333333" />
+        <entry key="..\:/Android/Android-Project/Pictogram/app/src/main/res/drawable/vec_shooting.xml" value="0.4161458333333333" />
+        <entry key="..\:/Android/Android-Project/Pictogram/app/src/main/res/drawable/vec_table_tennis.xml" value="0.4161458333333333" />
+        <entry key="..\:/Android/Android-Project/Pictogram/app/src/main/res/drawable/vec_taekwondo.xml" value="0.4161458333333333" />
+        <entry key="..\:/Android/Android-Project/Pictogram/app/src/main/res/drawable/vec_tennis.xml" value="0.4161458333333333" />
+        <entry key="..\:/Android/Android-Project/Pictogram/app/src/main/res/drawable/vec_volleyball.xml" value="0.4161458333333333" />
+        <entry key="..\:/Android/Android-Project/Pictogram/app/src/main/res/drawable/vec_weightlifting.xml" value="0.4161458333333333" />
+        <entry key="..\:/Android/Android-Project/Pictogram/app/src/main/res/drawable/vec_wrestling.xml" value="0.4161458333333333" />
+        <entry key="..\:/Android/Android-Project/Pictogram/app/src/main/res/layout/activity_main.xml" value="0.21354166666666666" />
+        <entry key="..\:/Android/Android-Project/Pictogram/app/src/main/res/layout/fragment_game.xml" value="0.25931737936445665" />
+        <entry key="..\:/Android/Android-Project/Pictogram/app/src/main/res/layout/fragment_starting.xml" value="0.2125" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>
