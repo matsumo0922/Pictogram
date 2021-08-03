@@ -2,6 +2,8 @@ package caios.android.pictogram.fragment
 
 import android.os.Bundle
 import android.util.Size
+import android.view.OrientationEventListener
+import android.view.Surface
 import android.view.View
 import androidx.camera.core.AspectRatio
 import androidx.camera.core.CameraSelector
@@ -79,6 +81,8 @@ class GameFragment: Fragment(R.layout.fragment_game) {
 
         binding.previewView.implementationMode = PreviewView.ImplementationMode.COMPATIBLE
 
+        val previewSize = Size(binding.surfaceView.width, binding.surfaceView.height)
+
         val preview = Preview.Builder().build().also {
             it.setSurfaceProvider(binding.previewView.surfaceProvider)
         }
@@ -91,10 +95,27 @@ class GameFragment: Fragment(R.layout.fragment_game) {
             setTargetRotation(binding.previewView.display.rotation)
             setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
         }.build().also {
-            it.setAnalyzer(cameraExecutor, PostureEstimator(requireContext(), Device.NNAPI) { posture, bitmap ->
-                postureSurfaceView.drawPosture(posture, bitmap)
+            it.setAnalyzer(cameraExecutor, PostureEstimator(requireContext(), Device.CPU) { posture, bitmap ->
+                postureSurfaceView.drawPosture(posture, bitmap, previewSize)
             })
         }
+
+        val orientationEventListener = object : OrientationEventListener(requireContext()) {
+            override fun onOrientationChanged(orientation: Int) {
+                val rotation = when(orientation) {
+                    ORIENTATION_UNKNOWN -> return
+                    in 45 until 135     -> Surface.ROTATION_270
+                    in 135 until 225    -> Surface.ROTATION_270
+                    in 225 until 315    -> Surface.ROTATION_90
+                    else                -> Surface.ROTATION_90
+                }
+
+                preview.targetRotation = rotation
+                imageAnalyzer.targetRotation = rotation
+            }
+        }
+
+        orientationEventListener.enable()
 
         try {
             cameraProvider.unbindAll()

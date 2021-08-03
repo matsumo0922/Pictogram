@@ -3,9 +3,12 @@ package caios.android.pictogram.analyze
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.util.Size
+import android.view.WindowManager
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
+import caios.android.pictogram.R
 
 typealias EstimationCallback = ((posture: PostureData, bitmap: Bitmap) -> Unit)
 

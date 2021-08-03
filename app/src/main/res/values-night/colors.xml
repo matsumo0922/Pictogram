@@ -24,32 +24,4 @@
     <color name="colorIconSecondary">#5B6064</color>
     <color name="colorIconDisable">#717275</color>
 
-    <color name="colorMainCircleCroller">#202124</color>
-    <color name="colorBackCircleCroller">#2A2B2E</color>
-
-    <color name="colorDonateBackground">#202124</color>
-    <color name="colorDonateBackground1">#2A2D32</color>
-    <color name="colorDonateBackground2">#2F262E</color>
-    <color name="colorDonateBackground3">#2F2728</color>
-    <color name="colorDonateBackground4">#2A2832</color>
-    <color name="colorDonateBackground5">#2E2C28</color>
-    <color name="colorDonateBackground6">#232C29</color>
-    <color name="colorDonateBackground7">#1F212C</color>
-    <color name="colorDonateBackground8">#23262A</color>
-
-    <color name="colorDonateAccent1">#C2DDF9</color>
-    <color name="colorDonateAccent2">#FF6DB6</color>
-    <color name="colorDonateAccent3">#FF7A63</color>
-    <color name="colorDonateAccent4">#C78FF5</color>
-    <color name="colorDonateAccent5">#FFD36D</color>
-    <color name="colorDonateAccent6">#4AC677</color>
-    <color name="colorDonateAccent7">#7986CB</color>
-    <color name="colorDonateAccent8">#78909C</color>
-
-    <color name="colorAccentRed">#F15B47</color>
-    <color name="colorAccentPink">#D04F97</color>
-    <color name="colorAccentOrange">#FD951E</color>
-    <color name="colorAccentPurple">#9575CD</color>
-    <color name="colorAccentBlue">#414FA3</color>
-    <color name="colorAccentGreen">#9FC24D</color>
 </resources>

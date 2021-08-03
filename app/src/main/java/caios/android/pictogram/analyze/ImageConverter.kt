@@ -1,7 +1,9 @@
 package caios.android.pictogram.analyze
 
+import android.content.ContentValues.TAG
 import android.graphics.*
 import android.media.Image
+import android.util.Log
 
 import android.util.Size
 import java.io.ByteArrayOutputStream
@@ -12,13 +14,15 @@ object ImageConverter {
 
     // ImageProxy -> Bitmap
     fun imageToToBitmap(image: Image, rotationDegrees: Int): Bitmap {
+        Log.d(TAG, "imageToToBitmap: $rotationDegrees")
+
         val data = imageToByteArray(image)
-        val bitmap = rotateBitmap(BitmapFactory.decodeByteArray(data, 0, data!!.size), rotationDegrees)
-        return cropBitmap(bitmap, Size(257, 257))
+        val bitmap = BitmapFactory.decodeByteArray(data, 0, data!!.size)
+        return cropBitmap(bitmap, Size(MODEL_WIDTH, MODEL_HEIGHT), rotationDegrees)
     }
 
     // TFLに渡せるサイズに加工
-    private fun cropBitmap(bitmap: Bitmap, viewSize: Size): Bitmap {
+    private fun cropBitmap(bitmap: Bitmap, viewSize: Size, rotationDegrees: Int): Bitmap {
         val viewRatio = viewSize.width.toFloat() / viewSize.height.toFloat()
         val bitmapRatio = bitmap.width.toFloat() / bitmap.height.toFloat()
 
@@ -27,48 +31,17 @@ object ImageConverter {
         val sWidth: Int
         val sHeight: Int
 
-        // フロントカメラなので左右反転
-        val sMatrix = Matrix().apply {
-            preScale(-1f, 1f)
-        }
+        val sMatrix = Matrix()
 
         when {
-            viewRatio >= 1 && bitmapRatio >= 1 && viewRatio > bitmapRatio -> {
+            viewRatio > bitmapRatio -> {
                 startX = 0
                 startY = ((bitmap.height - (bitmap.width / viewRatio)) / 2).toInt()
                 sWidth = bitmap.width
                 sHeight = (bitmap.width / viewRatio).toInt()
                 sMatrix.postScale(viewSize.width.toFloat() / bitmap.width, viewSize.width.toFloat() / bitmap.width)
             }
-            viewRatio >= 1 && bitmapRatio >= 1 && viewRatio < bitmapRatio -> {
-                startX = ((bitmap.width - (bitmap.height * viewRatio)) / 2).toInt()
-                startY = 0
-                sWidth = (bitmap.height * viewRatio).toInt()
-                sHeight = bitmap.height
-                sMatrix.postScale(viewSize.height.toFloat() / bitmap.height, viewSize.height.toFloat() / bitmap.height)
-            }
-            viewRatio < 1 && bitmapRatio < 1 && viewRatio > bitmapRatio -> {
-                startX = 0
-                startY = ((bitmap.height - (bitmap.width / viewRatio)) / 2).toInt()
-                sWidth = bitmap.width
-                sHeight = (bitmap.width / viewRatio).toInt()
-                sMatrix.postScale(viewSize.width.toFloat() / bitmap.width, viewSize.width.toFloat() / bitmap.width)
-            }
-            viewRatio < 1 && bitmapRatio < 1 && viewRatio < bitmapRatio -> {
-                startX = ((bitmap.width - (bitmap.height * viewRatio)) / 2).toInt()
-                startY = 0
-                sWidth = (bitmap.height * viewRatio).toInt()
-                sHeight = bitmap.height
-                sMatrix.postScale(viewSize.height.toFloat() / bitmap.height, viewSize.height.toFloat() / bitmap.height)
-            }
-            viewRatio >= 1 && bitmapRatio < 1                            -> {
-                startX = 0
-                startY = ((bitmap.height - (bitmap.width / viewRatio)) / 2).toInt()
-                sWidth = bitmap.width
-                sHeight = (bitmap.width / viewRatio).toInt()
-                sMatrix.postScale(viewSize.width.toFloat() / bitmap.width, viewSize.width.toFloat() / bitmap.width)
-            }
-            viewRatio < 1 && bitmapRatio >= 1                            -> {
+            viewRatio < bitmapRatio -> {
                 startX = ((bitmap.width - (bitmap.height * viewRatio)) / 2).toInt()
                 startY = 0
                 sWidth = (bitmap.height * viewRatio).toInt()
@@ -80,16 +53,10 @@ object ImageConverter {
             }
         }
 
+        sMatrix.postRotate(rotationDegrees.toFloat(), sWidth / 2f, sHeight / 2f)
+        sMatrix.preScale(-1f, 1f)
+
         return Bitmap.createBitmap(bitmap, startX, startY, sWidth, sHeight, sMatrix, true)
-    }
-
-    // 回転
-    private fun rotateBitmap(bitmap: Bitmap, rotationDegrees: Int): Bitmap {
-        if(rotationDegrees == 0) return bitmap
-
-        val mat = Matrix().apply { postRotate(rotationDegrees.toFloat()) }
-
-        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, mat, true)
     }
 
     // Image -> JPEGのバイト配列

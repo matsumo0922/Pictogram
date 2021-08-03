@@ -109,7 +109,7 @@ class PoseNetInterpriter(
                 }
             }
 
-            keyPositions[keyPoint] = Position(maxCol, maxRow)
+            keyPositions[keyPoint] = Position(maxRow, maxCol)
         }
 
         return keyPositions
@@ -130,11 +130,11 @@ class PoseNetInterpriter(
         val yCoords = IntArray(numKeyPoints)
 
         for((index, position) in keyPositions.withIndex()) {
-            val positionX = keyPositions[index].x
-            val positionY = keyPositions[index].y
+            val positionY = keyPositions[index].x
+            val positionX = keyPositions[index].y
 
-            xCoords[index] = (position.x / (width - 1).toFloat() * bitmap.width + offsets[0][positionY][positionX][index]).toInt()
-            yCoords[index] = (position.y / (height - 1).toFloat() * bitmap.height + offsets[0][positionY][positionX][index + numKeyPoints]).toInt()
+            yCoords[index] = (position.x / (height - 1).toFloat() * bitmap.height + offsets[0][positionY][positionX][index]).toInt()
+            xCoords[index] = (position.y / (width - 1).toFloat() * bitmap.width + offsets[0][positionY][positionX][index + numKeyPoints]).toInt()
 
             confidenceScores[index] = sigmoid(heatMaps[0][positionY][positionX][index])
         }
