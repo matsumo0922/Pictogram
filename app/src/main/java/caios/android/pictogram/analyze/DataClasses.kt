@@ -45,7 +45,28 @@ enum class BodyPart {
 }
 
 enum class PictogramEvent {
-    ARCHERY
+    ARCHERY,
+    WEIGHTLIFTING,
+    VOLLEYBALL,
+    TENNIS,
+    ATHLETICS,
+    BADMINTON,
+    BASKETBALL,
+    BEACH_VOLLEYBALL,
+    BOXING,
+    CYCLING,
+    DIVING,
+    FENCING,
+    FOOTBALL,
+    GOLF,
+    HANDBALL,
+    HOCKEY,
+    RHYTHMIC_GYMNASTICS,
+    RUGBY,
+    SHOOTING,
+    TABLE_TENNIS,
+    TAEKWONDO,
+    WRESTLING
 }
 
 val bodyPartsJoint = listOf(
@@ -80,8 +101,31 @@ val bodyPartsName = mapOf(
 )
 
 val pictogramEventName = mapOf(
-    PictogramEvent.ARCHERY to "Archery"
+    PictogramEvent.ARCHERY to "Archery",
+    PictogramEvent.WEIGHTLIFTING to "Weightlifting",
+    PictogramEvent.VOLLEYBALL to "Volleyball",
+    PictogramEvent.TENNIS to "Tennis",
+    PictogramEvent.ATHLETICS to "Athletics",
+    PictogramEvent.BADMINTON to "Badminton",
+    PictogramEvent.BASKETBALL to "Basketball",
+    PictogramEvent.BEACH_VOLLEYBALL to "BeachVolleyball",
+    PictogramEvent.BOXING to "Boxing",
+    PictogramEvent.CYCLING to "Cycling",
+    PictogramEvent.DIVING to "Diving",
+    PictogramEvent.FENCING to "Fencing",
+    PictogramEvent.FOOTBALL to "Football",
+    PictogramEvent.GOLF to "Golf",
+    PictogramEvent.HANDBALL to "Handball",
+    PictogramEvent.HOCKEY to "Hockey",
+    PictogramEvent.RHYTHMIC_GYMNASTICS to "RhythmicGymnastics",
+    PictogramEvent.RUGBY to "Rugby",
+    PictogramEvent.SHOOTING to "Shooting",
+    PictogramEvent.TABLE_TENNIS to "TableTennis",
+    PictogramEvent.TAEKWONDO to "Taekwondo",
+    PictogramEvent.WRESTLING to "Wrestling"
 )
+
+const val THRESHOLD_DEGREE_MATCHES = 1.40f
 
 const val MODEL_WIDTH = 257
 const val MODEL_HEIGHT = 257

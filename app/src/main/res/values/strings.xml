@@ -16,5 +16,30 @@
     <string name="weightlifting">重量挙げ</string>
     <string name="imitateThe">を真似しろ！</string>
     <string name="unknownError">不明なエラーが発生しました</string>
+    <string name="degreeMatch">一致度</string>
+    <string name="archery">アーチェリー</string>
+    <string name="volleyball">バレーボール</string>
+    <string name="tennis">テニス</string>
+    <string name="athletics">陸上競技</string>
+    <string name="badminton">バドミントン</string>
+    <string name="basketball">バスケットボール</string>
+    <string name="beachVolleyball">ビーチバレー</string>
+    <string name="boxing">ボクシング</string>
+    <string name="cycring">サイクリング</string>
+    <string name="diving">ダイビング</string>
+    <string name="fencing">フェンシング</string>
+    <string name="football">サッカー</string>
+    <string name="golf">ゴルフ</string>
+    <string name="handball">ハンドボール</string>
+    <string name="hockey">ホッケー</string>
+    <string name="rhythmicGymnastics">新体操</string>
+    <string name="rugby">ラグビー</string>
+    <string name="shooting">射撃</string>
+    <string name="taekwondo">テコンドー</string>
+    <string name="wrestling">レスリング</string>
+    <string name="adjustment">調整中</string>
+    <string name="adjustmentSum">全身がカメラに映るようにしてください</string>
+    <string name="testExplain">スマートフォンを起き、カメラに全身が写るようにしてください。\n\nアプリが全身を検知すると、自動的にゲームがスタートします</string>
+    <string name="untilGameStart">ゲーム開始まで</string>
 
 </resources>

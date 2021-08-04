@@ -7,6 +7,8 @@ import android.view.SurfaceHolder
 import android.view.SurfaceView
 import androidx.core.content.ContextCompat
 import caios.android.pictogram.R
+import kotlin.math.abs
+import kotlin.math.sqrt
 
 @SuppressLint("ViewConstructor")
 class PostureSurfaceView(surfaceView: SurfaceView): SurfaceView(surfaceView.context), SurfaceHolder.Callback {
@@ -31,7 +33,7 @@ class PostureSurfaceView(surfaceView: SurfaceView): SurfaceView(surfaceView.cont
 
     override fun surfaceDestroyed(holder: SurfaceHolder) = Unit
 
-    fun drawPosture(postureData: PostureData, bitmap: Bitmap, viewSize: Size, pictogramComparator: PictogramComparator): List<KeyPoint> {
+    fun drawPosture(postureData: PostureData, bitmap: Bitmap, viewSize: Size, time: Long): List<KeyPoint> {
         val canvas: Canvas? = surfaceHolder.lockCanvas()
         val scaleX = viewSize.width.toFloat() / bitmap.width
         val scaleY = viewSize.height.toFloat() / bitmap.height
@@ -62,6 +64,19 @@ class PostureSurfaceView(surfaceView: SurfaceView): SurfaceView(surfaceView.cont
             }
         }
 
+        val rightEarPosition = postureData.keyPoints.find { it.bodyPart == BodyPart.RIGHT_EYE }?.position
+        val leftEarPosition = postureData.keyPoints.find { it.bodyPart == BodyPart.LEFT_EAR }?.position
+        val nosePosition = postureData.keyPoints.find { it.bodyPart == BodyPart.NOSE }?.position
+
+        if(rightEarPosition != null && leftEarPosition != null && nosePosition != null) {
+            canvas?.drawCircle(nosePosition.x * scaleX, nosePosition.y * scaleY, getDistance(
+                Position((rightEarPosition.x * scaleX).toInt(),(rightEarPosition.y * scaleY).toInt()),
+                Position((leftEarPosition.x * scaleX).toInt(),(leftEarPosition.y * scaleY).toInt()),
+            ) * 1.3f, paint)
+        }
+
+        canvas?.drawText("FPS: %.2f".format(1 / (time.toDouble() / 1000)), 0f * scaleX, 15f * scaleY, paint)
+
         surfaceHolder.unlockCanvasAndPost(canvas ?: return emptyList())
 
         return drawKeyPoints
@@ -70,5 +85,12 @@ class PostureSurfaceView(surfaceView: SurfaceView): SurfaceView(surfaceView.cont
     private fun setPaint() {
         paint.color = ContextCompat.getColor(context, R.color.colorAccentGreen)
         paint.strokeWidth = 12f
+        paint.textSize = 34f
+    }
+
+    private fun getDistance(point1: Position, point2: Position): Float {
+        val x = abs(point1.x.toFloat() - point2.x)
+        val y = abs(point1.y.toFloat() - point2.y)
+        return sqrt(x * x + y * y)
     }
 }

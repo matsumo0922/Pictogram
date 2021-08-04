@@ -1,6 +1,6 @@
 [
     {
-        "eventName": "archery",
+        "eventName": "weightlifting",
         "imageSize": {
             "width": 11.112,
             "height": 11.112
@@ -70,6 +70,213 @@
                 "partsName": "LeftAnkle",
                 "x": 8.08,
                 "y": 10.50
+            }
+        ]
+    },
+    {
+        "eventName": "archery",
+        "imageSize": {
+            "width": 8.467,
+            "height": 11.377
+        },
+        "facePoint": {
+            "partsName": "Nose",
+            "x": 3.04,
+            "y": 2.04
+        },
+        "bodyPoint": [
+            {
+                "partsName": "RightWrist",
+                "x": 2.79,
+                "y": 3.85
+            },
+            {
+                "partsName": "RightElbow",
+                "x": 0.49,
+                "y": 3.78
+            },
+            {
+                "partsName": "RightShoulder",
+                "x": 2.17,
+                "y": 4.10
+            },
+            {
+                "partsName": "LeftWrist",
+                "x": 7.65,
+                "y": 3.78
+            },
+            {
+                "partsName": "LeftElbow",
+                "x": 5.80,
+                "y": 3.83
+            },
+            {
+                "partsName": "LightShoulder",
+                "x": 4.17,
+                "y": 3.85
+            },
+            {
+                "partsName": "RightHip",
+                "x": 2.36,
+                "y": 6.87
+            },
+            {
+                "partsName": "RightKnee",
+                "x": 2.36,
+                "y": 8.39
+            },
+            {
+                "partsName": "RightAnkle",
+                "x": 2.46,
+                "y": 10.42
+            },
+            {
+                "partsName": "LeftHip",
+                "x": 4.02,
+                "y": 6.85
+            },
+            {
+                "partsName": "LeftKnee",
+                "x": 4.19,
+                "y": 8.12
+            },
+            {
+                "partsName": "LeftAnkle",
+                "x": 4.49,
+                "y": 10.42
+            }
+        ]
+    },
+    {
+        "eventName": "volleyball",
+        "imageSize": {
+            "width": 8.467,
+            "height": 11.642
+        },
+        "facePoint": {
+            "partsName": "Nose",
+            "x": 3.04,
+            "y": 2.06
+        },
+        "bodyPoint": [
+            {
+                "partsName": "RightWrist",
+                "x": 0.98,
+                "y": 2.53
+            },
+            {
+                "partsName": "RightElbow",
+                "x": 1.02,
+                "y": 4.83
+            },
+            {
+                "partsName": "RightShoulder",
+                "x": 3.10,
+                "y": 4.19
+            },
+            {
+                "partsName": "LeftWrist",
+                "x": 8.02,
+                "y": 2.04
+            },
+            {
+                "partsName": "LeftElbow",
+                "x": 6.46,
+                "y": 3.00
+            },
+            {
+                "partsName": "LightShoulder",
+                "x": 4.68,
+                "y": 3.78
+            },
+            {
+                "partsName": "RightHip",
+                "x": 3.44,
+                "y": 6.85
+            },
+            {
+                "partsName": "RightKnee",
+                "x": 2.59,
+                "y": 8.80
+            },
+            {
+                "partsName": "RightAnkle",
+                "x": 0.45,
+                "y": 10.16
+            },
+            {
+                "partsName": "LeftHip",
+                "x": 4.70,
+                "y": 6.91
+            },
+            {
+                "partsName": "LeftKnee",
+                "x": 4.19,
+                "y": 9.44
+            },
+            {
+                "partsName": "LeftAnkle",
+                "x": 3.44,
+                "y": 11.27
+            }
+        ]
+    },
+    {
+        "eventName": "tennis",
+        "imageSize": {
+            "width": 8.477,
+            "height": 11.641
+        },
+        "facePoint": {
+            "partsName": "Nose",
+            "x": 4.89,
+            "y": 1.80
+        },
+        "bodyPoint": [
+            {
+                "partsName": "RightWrist",
+                "x": 8.07,
+                "y": 4.66
+            },
+            {
+                "partsName": "RightElbow",
+                "x": 6.07,
+                "y": 4.93
+            },
+            {
+                "partsName": "RightShoulder",
+                "x": 4.63,
+                "y": 3.83
+            },
+            {
+                "partsName": "RightHip",
+                "x": 2.92,
+                "y": 6.78
+            },
+            {
+                "partsName": "RightKnee",
+                "x": 6.64,
+                "y": 9.22
+            },
+            {
+                "partsName": "RightAnkle",
+                "x": 1.83,
+                "y": 11.20
+            },
+            {
+                "partsName": "LeftHip",
+                "x": 3.56,
+                "y": 6.71
+            },
+            {
+                "partsName": "LeftKnee",
+                "x": 5.52,
+                "y": 8.48
+            },
+            {
+                "partsName": "LeftAnkle",
+                "x": 6.10,
+                "y": 10.90
             }
         ]
     }

@@ -57,7 +57,7 @@ class PictogramComparator(
         val scaleY = viewSize.height.toFloat() / pictogramData.imageSize.height
         var scoreSum = 0f
 
-        if(keyPoints.size < 10) return 100f
+        if(keyPoints.size < 10) return 10f
 
         for(line in bodyPartsJoint) {
             val aFirstPoint = keyPoints.find { it.bodyPart.name.equals(line.first.name, ignoreCase = true) } ?: continue
@@ -74,7 +74,7 @@ class PictogramComparator(
             )
         }
 
-        return scoreSum / bodyPartsJoint.size
+        return (scoreSum / bodyPartsJoint.size).coerceAtMost(10f)
     }
 
     private data class PictogramData(

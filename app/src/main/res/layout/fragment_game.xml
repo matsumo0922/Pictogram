@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorAccentLight"
-    android:transitionName="backgroundView">
+    android:transitionName="backgroundView"
+    android:keepScreenOn="true">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
@@ -65,6 +66,39 @@
         android:layout_height="0dp"
         android:layout_margin="32dp"
         android:src="@drawable/vec_weightlifting"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/backgroundView"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/clearImage"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="48dp"
+        android:src="@drawable/vec_check"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/pictogramImage"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="@+id/pictogramImage"
+        app:layout_constraintStart_toStartOf="@+id/pictogramImage"
+        app:layout_constraintTop_toTopOf="@+id/pictogramImage" />
+
+    <TextView
+        android:id="@+id/testText"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="24dp"
+        android:breakStrategy="balanced"
+        android:gravity="center"
+        android:text="@string/testExplain"
+        android:textColor="@color/colorPrimaryText"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="@+id/backgroundView"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
@@ -86,6 +120,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="8dp"
+            android:gravity="center"
             android:orientation="vertical">
 
             <TextView
@@ -96,19 +131,19 @@
                 android:ellipsize="end"
                 android:gravity="center"
                 android:text="@string/weightlifting"
-                android:textSize="24sp"
+                android:textSize="26sp"
                 android:textStyle="bold"
                 android:textColor="@color/colorAccent" />
 
             <TextView
-                android:id="@+id/themeImitateText"
+                android:id="@+id/themeSubText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
                 android:ellipsize="end"
                 android:gravity="center"
-                android:textSize="18sp"
-                android:text="@string/imitateThe"
+                android:textSize="22sp"
+                android:text="@string/degreeMatch"
                 android:textColor="@color/colorPrimaryText" />
         </LinearLayout>
 
