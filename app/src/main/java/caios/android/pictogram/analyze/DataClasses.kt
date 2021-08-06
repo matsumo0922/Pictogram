@@ -58,15 +58,15 @@ enum class PictogramEvent {
     DIVING,
     FENCING,
     FOOTBALL,
-    GOLF,
+    //GOLF,
     HANDBALL,
     HOCKEY,
     RHYTHMIC_GYMNASTICS,
-    RUGBY,
+    //RUGBY,
     SHOOTING,
     TABLE_TENNIS,
     TAEKWONDO,
-    WRESTLING
+    //WRESTLING
 }
 
 val bodyPartsJoint = listOf(
@@ -114,15 +114,15 @@ val pictogramEventName = mapOf(
     PictogramEvent.DIVING to "Diving",
     PictogramEvent.FENCING to "Fencing",
     PictogramEvent.FOOTBALL to "Football",
-    PictogramEvent.GOLF to "Golf",
+    //PictogramEvent.GOLF to "Golf",
     PictogramEvent.HANDBALL to "Handball",
     PictogramEvent.HOCKEY to "Hockey",
     PictogramEvent.RHYTHMIC_GYMNASTICS to "RhythmicGymnastics",
-    PictogramEvent.RUGBY to "Rugby",
+    //PictogramEvent.RUGBY to "Rugby",
     PictogramEvent.SHOOTING to "Shooting",
     PictogramEvent.TABLE_TENNIS to "TableTennis",
     PictogramEvent.TAEKWONDO to "Taekwondo",
-    PictogramEvent.WRESTLING to "Wrestling"
+    //PictogramEvent.WRESTLING to "Wrestling"
 )
 
 const val THRESHOLD_DEGREE_MATCHES = 1.40f

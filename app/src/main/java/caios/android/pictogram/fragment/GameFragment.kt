@@ -1,10 +1,10 @@
 package caios.android.pictogram.fragment
 
 import android.annotation.SuppressLint
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.util.Size
 import android.view.OrientationEventListener
 import android.view.Surface
@@ -23,7 +23,9 @@ import caios.android.pictogram.analyze.*
 import caios.android.pictogram.analyze.PictogramEvent.*
 import caios.android.pictogram.databinding.FragmentGameBinding
 import caios.android.pictogram.dialog.CountdownDialog
-import caios.android.pictogram.utils.LogUtils.TAG
+import caios.android.pictogram.dialog.ErrorDialog
+import caios.android.pictogram.global.SettingClass
+import caios.android.pictogram.global.setting
 import caios.android.pictogram.utils.PermissionUtils
 import caios.android.pictogram.utils.ToastUtils
 import caios.android.pictogram.utils.autoCleared
@@ -44,13 +46,24 @@ class GameFragment: Fragment(R.layout.fragment_game) {
     private lateinit var cameraExecutor: ExecutorService
 
     private var gameTurn = 1
-    private val gameMaxTurn = 3
+    private val gameMaxTurn = 5
     private var gameEventList = mutableListOf<PictogramEvent>()
-    private var gameTimer = 0L
+    private var gameTime = 0.0f
     private var gameLapTime = mutableListOf<Long>()
 
     private var isShouldTest = true
     private var stopAnalyzeFlag = false
+
+    private val timeProcess = object : Runnable {
+
+        @SuppressLint("SetTextI18n")
+        override fun run() {
+            gameTime += 0.01f
+            binding.themeSubText.text = "${getString(R.string.elapsedTime)}: %.2f".format(gameTime)
+
+            handler.postDelayed(this, 10)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,8 +100,8 @@ class GameFragment: Fragment(R.layout.fragment_game) {
     }
 
     private fun initGame() {
-        val randomEventList = listOf(WEIGHTLIFTING, ARCHERY, VOLLEYBALL).shuffled().take(gameMaxTurn)
-        //val randomEventList = enumValues<PictogramEvent>().toMutableList().shuffled().take(gameTurnCount)
+        //val randomEventList = listOf(WEIGHTLIFTING, ARCHERY, VOLLEYBALL).shuffled().take(gameMaxTurn)
+        val randomEventList = enumValues<PictogramEvent>().toMutableList().shuffled().take(gameMaxTurn)
 
         gameEventList.clear()
         gameEventList.addAll(randomEventList)
@@ -105,8 +118,8 @@ class GameFragment: Fragment(R.layout.fragment_game) {
             binding.themeSportsText.text = getEventName(turnEvent)
             binding.pictogramImage.setImageResource(getEventPictogram(turnEvent))
         } else {
-            ToastUtils.show(requireContext(), "GAME CLEAR!!")
-            findNavController().popBackStack()
+            handler.removeCallbacks(timeProcess)
+            findNavController().navigate(R.id.action_gameFragment_to_resultFragment)
         }
     }
 
@@ -124,9 +137,11 @@ class GameFragment: Fragment(R.layout.fragment_game) {
         if (keyPoints.size == enumValues<BodyPart>().size && childFragmentManager.findFragmentByTag("CountdownDialog") == null) {
             handler.post {
                 CountdownDialog.build(3) {
+                    setTurn(gameTurn)
+
                     isShouldTest = false
 
-                    setTurn(gameTurn)
+                    handler.post(timeProcess)
 
                     binding.themeSubText.visibility = View.VISIBLE
                     binding.pictogramImage.visibility = View.VISIBLE
@@ -148,7 +163,28 @@ class GameFragment: Fragment(R.layout.fragment_game) {
     private fun bindPreview(cameraProvider: ProcessCameraProvider) {
         binding.previewView.implementationMode = PreviewView.ImplementationMode.COMPATIBLE
 
+        val processingMethod = Device.valueOf(setting.getString(SettingClass.PROCESSING_METHOD, Device.CPU.name))
         val previewSize = Size(binding.surfaceView.width, binding.surfaceView.height)
+
+        val estimationListener = object : PostureEstimator.EstimationListener {
+            override fun onSuccess(posture: PostureData, bitmap: Bitmap, time: Long) {
+                val drawKeyPoint = postureSurfaceView.drawPosture(posture, bitmap, previewSize, time)
+
+                when {
+                    stopAnalyzeFlag -> Unit
+                    isShouldTest    -> setTestResult(drawKeyPoint)
+                    else            -> frameUpdate(pictogramComparator.comparate(drawKeyPoint, previewSize))
+                }
+            }
+
+            override fun onError(e: Throwable) {
+                handler.post {
+                    handler.removeCallbacks(timeProcess)
+                    ErrorDialog.build(e).show(parentFragmentManager, null)
+                    findNavController().popBackStack()
+                }
+            }
+        }
 
         val preview = Preview.Builder().build().also {
             it.setSurfaceProvider(binding.previewView.surfaceProvider)
@@ -162,15 +198,7 @@ class GameFragment: Fragment(R.layout.fragment_game) {
             setTargetRotation(binding.previewView.display.rotation)
             setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
         }.build().also {
-            it.setAnalyzer(cameraExecutor, PostureEstimator(requireContext(), Device.CPU) { posture, bitmap, time ->
-                val drawKeyPoint = postureSurfaceView.drawPosture(posture, bitmap, previewSize, time)
-
-                when {
-                    stopAnalyzeFlag -> Unit
-                    isShouldTest    -> setTestResult(drawKeyPoint)
-                    else            -> frameUpdate(pictogramComparator.comparate(drawKeyPoint, previewSize))
-                }
-            })
+            it.setAnalyzer(cameraExecutor, PostureEstimator(requireContext(), processingMethod, estimationListener))
         }
 
         val orientationEventListener = object : OrientationEventListener(requireContext()) {
@@ -227,19 +255,19 @@ class GameFragment: Fragment(R.layout.fragment_game) {
             BASKETBALL          -> getString(R.string.basketball)
             BEACH_VOLLEYBALL    -> getString(R.string.beachVolleyball)
             BOXING              -> getString(R.string.boxing)
-            CYCLING             -> getString(R.string.cycring)
+            CYCLING             -> getString(R.string.cycling)
             DIVING              -> getString(R.string.diving)
             FENCING             -> getString(R.string.fencing)
             FOOTBALL            -> getString(R.string.football)
-            GOLF                -> getString(R.string.golf)
+            //GOLF                -> getString(R.string.golf)
             HANDBALL            -> getString(R.string.handball)
             HOCKEY              -> getString(R.string.hockey)
             RHYTHMIC_GYMNASTICS -> getString(R.string.rhythmicGymnastics)
-            RUGBY               -> getString(R.string.rugby)
+            //RUGBY               -> getString(R.string.rugby)
             SHOOTING            -> getString(R.string.shooting)
             TABLE_TENNIS        -> getString(R.string.tableTennis)
             TAEKWONDO           -> getString(R.string.taekwondo)
-            WRESTLING           -> getString(R.string.wrestling)
+            //WRESTLING           -> getString(R.string.wrestling)
         }
     }
 
@@ -259,15 +287,15 @@ class GameFragment: Fragment(R.layout.fragment_game) {
             DIVING              -> R.drawable.vec_diving
             FENCING             -> R.drawable.vec_fencing
             FOOTBALL            -> R.drawable.vec_football
-            GOLF                -> R.drawable.vec_golf
+            //GOLF                -> R.drawable.vec_golf
             HANDBALL            -> R.drawable.vec_handball
             HOCKEY              -> R.drawable.vec_hockey
             RHYTHMIC_GYMNASTICS -> R.drawable.vec_rhythmic_gymnastics
-            RUGBY               -> R.drawable.vec_rugby_sevens
+            //RUGBY               -> R.drawable.vec_rugby_sevens
             SHOOTING            -> R.drawable.vec_shooting
             TABLE_TENNIS        -> R.drawable.vec_table_tennis
             TAEKWONDO           -> R.drawable.vec_taekwondo
-            WRESTLING           -> R.drawable.vec_weightlifting
+            //WRESTLING           -> R.drawable.vec_weightlifting
         }
     }
 }

@@ -3,26 +3,34 @@
     package="caios.android.pictogram">
 
     <uses-feature android:name="android.hardware.camera.front" />
+
     <uses-permission android:name="android.permission.CAMERA" />
 
     <application
+        android:name=".global.GlobalClass"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:name=".global.GlobalClass"
         android:theme="@style/AppTheme.Default">
 
         <activity
             android:name=".activity.MainActivity"
-            android:screenOrientation="sensorLandscape"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="sensorLandscape">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
+
+        <activity
+            android:name=".activity.SettingActivity"
+            android:exported="true"
+            android:screenOrientation="sensorLandscape" />
 
     </application>
 

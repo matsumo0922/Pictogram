@@ -21,6 +21,8 @@ class PictogramComparator(
         val json = context.resources.openRawResource(R.raw.pictogram).bufferedReader().use { it.readText() }
         val dataList = Gson().fromJson<Collection<PictogramData>>(json, object : TypeToken<Collection<PictogramData>>() {}.type)
 
+        Log.d(TAG, "loadPictogramData: ${pictogramEventName[event]}, $dataList")
+
         // なかったら死ぬ
         return dataList.find { it.eventName.equals(pictogramEventName[event], ignoreCase = true) }!!
     }

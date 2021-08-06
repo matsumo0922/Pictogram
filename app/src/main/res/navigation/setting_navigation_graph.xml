@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/setting_navigation_graph"
+    app:startDestination="@id/normalSettingFragment">
+
+    <fragment
+        android:id="@+id/normalSettingFragment"
+        android:name="caios.android.pictogram.fragment.NormalSettingFragment"
+        android:label="NormalSettingFragment" />
+
+</navigation>

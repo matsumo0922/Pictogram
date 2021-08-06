@@ -17,6 +17,21 @@
     <fragment
         android:id="@+id/gameFragment"
         android:name="caios.android.pictogram.fragment.GameFragment"
-        android:label="GameFragment"/>
+        android:label="GameFragment">
+        <action
+            android:id="@+id/action_gameFragment_to_resultFragment"
+            app:destination="@id/resultFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/resultFragment"
+        android:name="caios.android.pictogram.fragment.ResultFragment"
+        android:label="ResultFragment" >
+        <action
+            android:id="@+id/action_resultFragment_to_startingFragment"
+            app:destination="@id/startingFragment"
+            app:popUpTo="@id/startingFragment"
+            app:popUpToInclusive="true"/>
+    </fragment>
 
 </navigation>

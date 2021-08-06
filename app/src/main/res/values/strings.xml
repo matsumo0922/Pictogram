@@ -12,6 +12,7 @@
     <string name="explainRule">ルール説明</string>
     <string name="gameSummary">ピクトグラムになりきってハイスコアを目指そう！！</string>
     <string name="permissionReject">許可されませんでした</string>
+    <string name="requirePermission">アプリを使用するにはカメラの権限が必要です</string>
     <string name="tableTennis">卓球</string>
     <string name="weightlifting">重量挙げ</string>
     <string name="imitateThe">を真似しろ！</string>
@@ -25,7 +26,7 @@
     <string name="basketball">バスケットボール</string>
     <string name="beachVolleyball">ビーチバレー</string>
     <string name="boxing">ボクシング</string>
-    <string name="cycring">サイクリング</string>
+    <string name="cycling">サイクリング</string>
     <string name="diving">ダイビング</string>
     <string name="fencing">フェンシング</string>
     <string name="football">サッカー</string>
@@ -41,5 +42,20 @@
     <string name="adjustmentSum">全身がカメラに映るようにしてください</string>
     <string name="testExplain">スマートフォンを起き、カメラに全身が写るようにしてください。\n\nアプリが全身を検知すると、自動的にゲームがスタートします</string>
     <string name="untilGameStart">ゲーム開始まで</string>
+    <string name="elapsedTime">経過時間</string>
+    <string name="general">一般</string>
+    <string name="processingMethod">処理方法</string>
+    <string name="processingMethodSum">姿勢推定に使用する処理方法を選択します。一般に、CPUよりもGPUのほうが高速に処理することができます。Android P 以上のデバイスであればNNAPIを使用することでさらなる高速化が期待できます。</string>
+    <string name="overview">概要</string>
+    <string name="version">バージョン</string>
+    <string name="openSourceLicense">オープンソースライセンス</string>
+    <string name="debugSetting">デバッグ用設定</string>
+    <string name="debug">デバッグ</string>
+    <string name="hideFace">顔隠し</string>
+    <string name="setting">設定</string>
+    <string name="error">エラー</string>
+    <string name="criticalErrorSum">ゲームを進行できない深刻なエラーが発生しました。</string>
+    <string name="debugInformation">デバッグ情報</string>
+    <string name="adviceProcessingMethod">処理方法をCPUに変更するとエラーが解消される場合があります。</string>
 
 </resources>

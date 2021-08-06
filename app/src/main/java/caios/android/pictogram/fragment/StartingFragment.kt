@@ -1,5 +1,6 @@
 package caios.android.pictogram.fragment
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
@@ -8,6 +9,7 @@ import androidx.navigation.NavDirections
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import caios.android.pictogram.R
+import caios.android.pictogram.activity.SettingActivity
 import caios.android.pictogram.databinding.FragmentStartingBinding
 import caios.android.pictogram.utils.PermissionUtils
 import caios.android.pictogram.utils.ToastUtils
@@ -40,19 +42,23 @@ class StartingFragment: Fragment(R.layout.fragment_starting) {
 
         binding.startButton.setOnClickListener {
             if(requirePermission()) {
-                findNavController().navigate(StartingFragmentDirections.actionStartingFragmentToGameFragment())
+                findNavController().navigate(R.id.action_startingFragment_to_gameFragment)
             }
         }
 
         binding.ruleButton.setOnClickListener {
 
         }
+
+        binding.settingButton.setOnClickListener {
+            startActivity(Intent(requireContext(), SettingActivity::class.java))
+        }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         if(requestCode == PERMISSION_REQUEST_ID) {
             if(PermissionUtils.isAllowed(requireContext(), PermissionUtils.requestPermissions)) {
-                findNavController().navigate(StartingFragmentDirections.actionStartingFragmentToGameFragment())
+                findNavController().navigate(R.id.action_startingFragment_to_gameFragment)
             } else {
                 ToastUtils.show(requireContext(), R.string.permissionReject)
             }
@@ -65,6 +71,7 @@ class StartingFragment: Fragment(R.layout.fragment_starting) {
                 PermissionUtils.requestPermission(this, PermissionUtils.requestPermissions, PERMISSION_REQUEST_ID)
                 permissionRequestCount++
             } else {
+                ToastUtils.show(requireContext(), R.string.requirePermission)
                 PermissionUtils.startAppInfoActivity(requireContext())
             }
             return false

@@ -11,12 +11,10 @@ import androidx.camera.core.ImageProxy
 import caios.android.pictogram.R
 import kotlin.system.measureTimeMillis
 
-typealias EstimationCallback = ((posture: PostureData, bitmap: Bitmap, time: Long) -> Unit)
-
 class PostureEstimator(
     private val context: Context,
     private val device: Device,
-    private val listener: EstimationCallback
+    private val listener: EstimationListener
 ): ImageAnalysis.Analyzer {
 
     private val interpriter = PoseNetInterpriter(context, device)
@@ -27,12 +25,21 @@ class PostureEstimator(
         val posture: PostureData
 
         val time = measureTimeMillis {
-            bitmap = image.image?.let { ImageConverter.imageToToBitmap(it, image.imageInfo.rotationDegrees) } ?: return
-            posture = interpriter.estimatePosture(bitmap)
+            try {
+                bitmap = image.image?.let { ImageConverter.imageToToBitmap(it, image.imageInfo.rotationDegrees) } ?: return
+                posture = interpriter.estimatePosture(bitmap)
+                image.close()
+            } catch (e: Throwable) {
+                listener.onError(e)
+                return
+            }
         }
 
-        image.close()
+        listener.onSuccess(posture, bitmap, time)
+    }
 
-        listener(posture, bitmap, time)
+    interface EstimationListener {
+        fun onSuccess(posture: PostureData, bitmap: Bitmap, time: Long)
+        fun onError(e: Throwable)
     }
 }

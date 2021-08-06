@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/general">
+
+        <Preference
+            android:key="ProcessingMethod"
+            android:title="@string/processingMethod"
+            android:summary="@string/processingMethodSum" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/debug">
+
+        <SwitchPreference
+            android:key="HideFace"
+            android:title="@string/hideFace" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/overview">
+
+        <Preference
+            android:key="OpenSourceLicense"
+            android:title="@string/openSourceLicense" />
+
+        <Preference
+            android:key="Version"
+            android:title="@string/version" />
+
+    </PreferenceCategory>
+</PreferenceScreen>

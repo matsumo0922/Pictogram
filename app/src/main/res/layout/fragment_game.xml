@@ -143,7 +143,7 @@
                 android:ellipsize="end"
                 android:gravity="center"
                 android:textSize="22sp"
-                android:text="@string/degreeMatch"
+                android:text="@string/elapsedTime"
                 android:textColor="@color/colorPrimaryText" />
         </LinearLayout>
 
