@@ -28,9 +28,8 @@ import caios.android.pictogram.dialog.ErrorDialog
 import caios.android.pictogram.global.SettingClass
 import caios.android.pictogram.global.ranking
 import caios.android.pictogram.global.setting
-import caios.android.pictogram.utils.LogUtils.TAG
+import caios.android.pictogram.utils.LogUtils
 import caios.android.pictogram.utils.PermissionUtils
-import caios.android.pictogram.utils.ToastUtils
 import caios.android.pictogram.utils.autoCleared
 import com.google.android.material.transition.MaterialSharedAxis
 import com.google.common.util.concurrent.ListenableFuture
@@ -191,8 +190,13 @@ class GameFragment: Fragment(R.layout.fragment_game) {
             }
         }
 
-        val preview = Preview.Builder().build().also {
-            it.setSurfaceProvider(binding.previewView.surfaceProvider)
+        val preview = if(setting.getBoolean("PreviewCamera", true)) {
+            Preview.Builder().build().also {
+                it.setSurfaceProvider(binding.previewView.surfaceProvider)
+            }
+        } else {
+            binding.previewView.visibility = View.GONE
+            null
         }
 
         val selector = CameraSelector.Builder().apply {
@@ -216,7 +220,7 @@ class GameFragment: Fragment(R.layout.fragment_game) {
                     else                -> Surface.ROTATION_90
                 }
 
-                preview.targetRotation = rotation
+                preview?.targetRotation = rotation
                 imageAnalyzer.targetRotation = rotation
             }
         }
@@ -225,16 +229,20 @@ class GameFragment: Fragment(R.layout.fragment_game) {
 
         try {
             cameraProvider.unbindAll()
-            cameraProvider.bindToLifecycle(this, selector, preview, imageAnalyzer)
+
+            if(preview != null) cameraProvider.bindToLifecycle(this, selector, preview, imageAnalyzer)
+            else cameraProvider.bindToLifecycle(this, selector, imageAnalyzer)
         } catch (e: Throwable) {
-            ToastUtils.show(requireContext(), R.string.unknownError)
-            findNavController().navigateUp()
+            onError(e)
         }
     }
 
     @SuppressLint("SetTextI18n")
     private fun frameUpdate(score: Float) {
-        Log.d(TAG, "frameUpdate: $score")
+        if(score < 10f) {
+            Log.d(LogUtils.TAG, "frameUpdate: $score")
+        }
+
         if (score < THRESHOLD_DEGREE_MATCHES) {
             handler.post {
                 stopAnalyzeFlag = true
@@ -243,9 +251,11 @@ class GameFragment: Fragment(R.layout.fragment_game) {
                 handler.postDelayed({
                     binding.clearImage.visibility = View.GONE
                     setTurn(gameTurn + 1)
-
-                    stopAnalyzeFlag = false
                 }, 1000)
+
+                handler.postDelayed({
+                    stopAnalyzeFlag = false
+                }, 3000)
             }
         }
     }

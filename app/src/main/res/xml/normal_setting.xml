@@ -7,14 +7,11 @@
             android:title="@string/processingMethod"
             android:summary="@string/processingMethodSum" />
 
-    </PreferenceCategory>
-
-    <PreferenceCategory android:title="@string/debug">
-
         <SwitchPreference
-            android:key="HideFace"
-            android:title="@string/hideFace" />
-
+            android:key="PreviewCamera"
+            android:title="@string/previewCamera"
+            android:summary="@string/previewCameraSum"
+            android:defaultValue="true" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/overview">

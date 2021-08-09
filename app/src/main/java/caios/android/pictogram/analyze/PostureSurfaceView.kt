@@ -7,7 +7,6 @@ import android.view.SurfaceHolder
 import android.view.SurfaceView
 import androidx.core.content.ContextCompat
 import caios.android.pictogram.R
-import caios.android.pictogram.global.setting
 import kotlin.math.abs
 import kotlin.math.atan2
 import kotlin.math.sqrt
@@ -19,7 +18,6 @@ class PostureSurfaceView(surfaceView: SurfaceView) : SurfaceView(surfaceView.con
     private val paint = Paint()
 
     private val minConfidence = 0.5f
-    private val isHideFace = setting.getBoolean("HideFace", false)
 
     //各パーツを顔の何倍で描写するか
     private val pictogramPartsSize = mapOf(

@@ -39,7 +39,10 @@ class ErrorDialog: DialogFragment() {
         fun build(e: Throwable): ErrorDialog {
             return ErrorDialog().apply {
                 arguments = Bundle().apply {
-                    putStringArray("stacktrace", e.stackTrace.map { it.toString() }.toTypedArray())
+                    putStringArray("stacktrace", mutableListOf<String>().apply {
+                        add(e.javaClass.name + ": " + e.message)
+                        addAll(e.stackTrace.map { it.toString() }.toList())
+                    }.toTypedArray())
                 }
             }
         }

@@ -137,13 +137,14 @@ val pictogramEventName = mapOf(
 //debug
 val pictogramEventDisables = listOf(
     PictogramEvent.TENNIS,
-    PictogramEvent.GOLF,
     PictogramEvent.DIVING,
+    PictogramEvent.RHYTHMIC_GYMNASTICS,
     PictogramEvent.RUGBY,
+    PictogramEvent.TAEKWONDO,
     PictogramEvent.WRESTLING
 )
 
-const val THRESHOLD_DEGREE_MATCHES = 1.30f
+const val THRESHOLD_DEGREE_MATCHES = 2.80f
 
 const val MODEL_WIDTH = 257
 const val MODEL_HEIGHT = 257

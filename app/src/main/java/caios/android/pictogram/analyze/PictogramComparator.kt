@@ -43,27 +43,28 @@ class PictogramComparator(
         return y / x
     }
 
-    private fun comparateVector(pointX1: Position, pointX2: Position, pointY1: Position, pointY2: Position): Float {
+    private fun comparateVector(firstPoint1: Position, firstPoint2: Position, secondPoint1: Position, secondPoint2: Position): Float {
         // 距離は体格によって違う場合があるので廃止
         // val xDistance = getDistance(pointX1, pointX2)
         // val yDistance = getDistance(pointY1, pointY2)
 
-        val xSlope = getSlope(pointX1, pointX2)
-        val ySlope = getSlope(pointY1, pointY2)
+        val firstSlope = getSlope(firstPoint1, firstPoint2)
+        val secondSlope = getSlope(secondPoint1, secondPoint2)
 
-        return abs(1 - (xSlope / ySlope))
+        return abs(1 - (firstSlope / secondSlope))
     }
 
     fun comparate(keyPoints: List<KeyPoint>, viewSize: Size): Float {
         val scaleX = viewSize.width.toFloat() / pictogramData.imageSize.width
         val scaleY = viewSize.height.toFloat() / pictogramData.imageSize.height
         var scoreSum = 0f
+        var scoreCount = 0
 
-        if(keyPoints.size < enumValues<BodyPart>().size) return 11f
+        if(keyPoints.size <= enumValues<BodyPart>().size / 2) return 11f
 
         for(line in pictogramPartsJoint) {
-            val aFirstPoint = keyPoints.find { it.bodyPart.name.equals(line.first.name, ignoreCase = true) } ?: continue
-            val aSecondPoint = keyPoints.find { it.bodyPart.name.equals(line.second.name, ignoreCase = true)} ?: continue
+            val aFirstPoint = keyPoints.find { it.bodyPart == line.first } ?: continue
+            val aSecondPoint = keyPoints.find { it.bodyPart == line.second } ?: continue
 
             val cFirstPoint = pictogramData.bodyPoint.find { it.partsName.equals(bodyPartsName[line.first], ignoreCase = true) } ?: continue
             val cSecondPoint = pictogramData.bodyPoint.find { it.partsName.equals(bodyPartsName[line.second], ignoreCase = true) } ?: continue
@@ -74,9 +75,10 @@ class PictogramComparator(
                 Position((cFirstPoint.x * scaleX).toInt(), (cFirstPoint.y * scaleY).toInt()),
                 Position((cSecondPoint.x * scaleX).toInt(), (cSecondPoint.y * scaleY).toInt())
             )
+            scoreCount++
         }
 
-        return (scoreSum / pictogramPartsJoint.size).coerceAtMost(10f)
+        return (scoreSum / scoreCount).coerceAtMost(10f)
     }
 
     private data class PictogramData(
