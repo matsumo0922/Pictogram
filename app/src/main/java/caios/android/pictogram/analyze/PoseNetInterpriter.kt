@@ -53,8 +53,8 @@ class PoseNetInterpriter(
     }
 
     private fun createInputBuffer(bitmap: Bitmap): ByteBuffer {
-        val imageMean = 128.0f
-        val imageStd = 128.0f
+        val imageMean = 64.0f
+        val imageStd = 64.0f
         val batchSize = 1
         val bytesPerChannel = 4
         val inputChannel = 3

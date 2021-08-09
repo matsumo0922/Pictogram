@@ -57,5 +57,12 @@
     <string name="criticalErrorSum">ゲームを進行できない深刻なエラーが発生しました。</string>
     <string name="debugInformation">デバッグ情報</string>
     <string name="adviceProcessingMethod">処理方法をCPUに変更するとエラーが解消される場合があります。</string>
+    <string name="gameClear">GAME CLEAR</string>
+    <string name="clearTime">クリアタイム</string>
+    <string name="ranking">ランキング</string>
+    <string name="backToTitle">タイトルへ戻る</string>
+    <string name="second">秒</string>
+    <string name="rank">位</string>
+    <string name="failedToRegisterRanking">ランキングの登録に失敗しました</string>
 
 </resources>

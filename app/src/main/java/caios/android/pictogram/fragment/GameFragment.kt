@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.util.Size
 import android.view.OrientationEventListener
 import android.view.Surface
@@ -25,12 +26,15 @@ import caios.android.pictogram.databinding.FragmentGameBinding
 import caios.android.pictogram.dialog.CountdownDialog
 import caios.android.pictogram.dialog.ErrorDialog
 import caios.android.pictogram.global.SettingClass
+import caios.android.pictogram.global.ranking
 import caios.android.pictogram.global.setting
+import caios.android.pictogram.utils.LogUtils.TAG
 import caios.android.pictogram.utils.PermissionUtils
 import caios.android.pictogram.utils.ToastUtils
 import caios.android.pictogram.utils.autoCleared
 import com.google.android.material.transition.MaterialSharedAxis
 import com.google.common.util.concurrent.ListenableFuture
+import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -49,7 +53,6 @@ class GameFragment: Fragment(R.layout.fragment_game) {
     private val gameMaxTurn = 5
     private var gameEventList = mutableListOf<PictogramEvent>()
     private var gameTime = 0.0f
-    private var gameLapTime = mutableListOf<Long>()
 
     private var isShouldTest = true
     private var stopAnalyzeFlag = false
@@ -100,26 +103,32 @@ class GameFragment: Fragment(R.layout.fragment_game) {
     }
 
     private fun initGame() {
-        //val randomEventList = listOf(WEIGHTLIFTING, ARCHERY, VOLLEYBALL).shuffled().take(gameMaxTurn)
-        val randomEventList = enumValues<PictogramEvent>().toMutableList().shuffled().take(gameMaxTurn)
+        val eventList = enumValues<PictogramEvent>().toMutableList().filter { event -> pictogramEventDisables.find { it == event } == null }
+        val randomEventList = eventList.shuffled().take(gameMaxTurn)
 
         gameEventList.clear()
         gameEventList.addAll(randomEventList)
     }
 
     private fun setTurn(turn: Int) {
-        if (gameMaxTurn >= turn) {
-            gameTurn = turn
+        try {
+            if (gameMaxTurn >= turn) {
+                gameTurn = turn
 
-            val turnEvent = gameEventList[turn - 1]
+                val turnEvent = gameEventList[turn - 1]
 
-            pictogramComparator = PictogramComparator(requireContext(), turnEvent)
+                pictogramComparator = PictogramComparator(requireContext(), turnEvent)
 
-            binding.themeSportsText.text = getEventName(turnEvent)
-            binding.pictogramImage.setImageResource(getEventPictogram(turnEvent))
-        } else {
-            handler.removeCallbacks(timeProcess)
-            findNavController().navigate(R.id.action_gameFragment_to_resultFragment)
+                binding.themeSportsText.text = getEventName(turnEvent)
+                binding.pictogramImage.setImageResource(getEventPictogram(turnEvent))
+            } else {
+                val ranking = ranking.setRanking(gameTime, Calendar.getInstance().time.time) ?: -1
+
+                findNavController().navigate(GameFragmentDirections.actionGameFragmentToResultFragment(gameTime, ranking))
+                handler.removeCallbacks(timeProcess)
+            }
+        } catch (e: Throwable) {
+            handler.post { onError(e) }
         }
     }
 
@@ -178,11 +187,7 @@ class GameFragment: Fragment(R.layout.fragment_game) {
             }
 
             override fun onError(e: Throwable) {
-                handler.post {
-                    handler.removeCallbacks(timeProcess)
-                    ErrorDialog.build(e).show(parentFragmentManager, null)
-                    findNavController().popBackStack()
-                }
+                handler.post { onError(e) }
             }
         }
 
@@ -229,6 +234,7 @@ class GameFragment: Fragment(R.layout.fragment_game) {
 
     @SuppressLint("SetTextI18n")
     private fun frameUpdate(score: Float) {
+        Log.d(TAG, "frameUpdate: $score")
         if (score < THRESHOLD_DEGREE_MATCHES) {
             handler.post {
                 stopAnalyzeFlag = true
@@ -242,6 +248,16 @@ class GameFragment: Fragment(R.layout.fragment_game) {
                 }, 1000)
             }
         }
+    }
+
+    private fun onError(e: Throwable) {
+        e.printStackTrace()
+
+        stopAnalyzeFlag = true
+        handler.removeCallbacks(timeProcess)
+
+        ErrorDialog.build(e).show(parentFragmentManager, null)
+        findNavController().popBackStack()
     }
 
     private fun getEventName(event: PictogramEvent): String {
@@ -259,15 +275,15 @@ class GameFragment: Fragment(R.layout.fragment_game) {
             DIVING              -> getString(R.string.diving)
             FENCING             -> getString(R.string.fencing)
             FOOTBALL            -> getString(R.string.football)
-            //GOLF                -> getString(R.string.golf)
+            GOLF                -> getString(R.string.golf)
             HANDBALL            -> getString(R.string.handball)
             HOCKEY              -> getString(R.string.hockey)
             RHYTHMIC_GYMNASTICS -> getString(R.string.rhythmicGymnastics)
-            //RUGBY               -> getString(R.string.rugby)
+            RUGBY               -> getString(R.string.rugby)
             SHOOTING            -> getString(R.string.shooting)
             TABLE_TENNIS        -> getString(R.string.tableTennis)
             TAEKWONDO           -> getString(R.string.taekwondo)
-            //WRESTLING           -> getString(R.string.wrestling)
+            WRESTLING           -> getString(R.string.wrestling)
         }
     }
 
@@ -287,15 +303,15 @@ class GameFragment: Fragment(R.layout.fragment_game) {
             DIVING              -> R.drawable.vec_diving
             FENCING             -> R.drawable.vec_fencing
             FOOTBALL            -> R.drawable.vec_football
-            //GOLF                -> R.drawable.vec_golf
+            GOLF                -> R.drawable.vec_golf
             HANDBALL            -> R.drawable.vec_handball
             HOCKEY              -> R.drawable.vec_hockey
             RHYTHMIC_GYMNASTICS -> R.drawable.vec_rhythmic_gymnastics
-            //RUGBY               -> R.drawable.vec_rugby_sevens
+            RUGBY               -> R.drawable.vec_rugby_sevens
             SHOOTING            -> R.drawable.vec_shooting
             TABLE_TENNIS        -> R.drawable.vec_table_tennis
             TAEKWONDO           -> R.drawable.vec_taekwondo
-            //WRESTLING           -> R.drawable.vec_weightlifting
+            WRESTLING           -> R.drawable.vec_weightlifting
         }
     }
 }

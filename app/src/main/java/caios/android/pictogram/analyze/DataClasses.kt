@@ -1,7 +1,5 @@
 package caios.android.pictogram.analyze
 
-import com.github.kittinunf.fuel.core.Body
-
 data class PostureData (
     val keyPoints: List<KeyPoint>,
     val score: Float,
@@ -58,15 +56,15 @@ enum class PictogramEvent {
     DIVING,
     FENCING,
     FOOTBALL,
-    //GOLF,
+    GOLF,
     HANDBALL,
     HOCKEY,
     RHYTHMIC_GYMNASTICS,
-    //RUGBY,
+    RUGBY,
     SHOOTING,
     TABLE_TENNIS,
     TAEKWONDO,
-    //WRESTLING
+    WRESTLING
 }
 
 val bodyPartsJoint = listOf(
@@ -100,6 +98,17 @@ val bodyPartsName = mapOf(
     BodyPart.LEFT_ANKLE to "LeftAnkle",
 )
 
+val pictogramPartsJoint = listOf(
+    Pair(BodyPart.LEFT_WRIST, BodyPart.LEFT_ELBOW),
+    Pair(BodyPart.LEFT_ELBOW, BodyPart.LEFT_SHOULDER),
+    Pair(BodyPart.RIGHT_SHOULDER, BodyPart.RIGHT_ELBOW),
+    Pair(BodyPart.RIGHT_ELBOW, BodyPart.RIGHT_WRIST),
+    Pair(BodyPart.LEFT_HIP, BodyPart.LEFT_KNEE),
+    Pair(BodyPart.LEFT_KNEE, BodyPart.LEFT_ANKLE),
+    Pair(BodyPart.RIGHT_HIP, BodyPart.RIGHT_KNEE),
+    Pair(BodyPart.RIGHT_KNEE, BodyPart.RIGHT_ANKLE)
+)
+
 val pictogramEventName = mapOf(
     PictogramEvent.ARCHERY to "Archery",
     PictogramEvent.WEIGHTLIFTING to "Weightlifting",
@@ -114,18 +123,27 @@ val pictogramEventName = mapOf(
     PictogramEvent.DIVING to "Diving",
     PictogramEvent.FENCING to "Fencing",
     PictogramEvent.FOOTBALL to "Football",
-    //PictogramEvent.GOLF to "Golf",
+    PictogramEvent.GOLF to "Golf",
     PictogramEvent.HANDBALL to "Handball",
     PictogramEvent.HOCKEY to "Hockey",
     PictogramEvent.RHYTHMIC_GYMNASTICS to "RhythmicGymnastics",
-    //PictogramEvent.RUGBY to "Rugby",
+    PictogramEvent.RUGBY to "Rugby",
     PictogramEvent.SHOOTING to "Shooting",
     PictogramEvent.TABLE_TENNIS to "TableTennis",
     PictogramEvent.TAEKWONDO to "Taekwondo",
-    //PictogramEvent.WRESTLING to "Wrestling"
+    PictogramEvent.WRESTLING to "Wrestling"
 )
 
-const val THRESHOLD_DEGREE_MATCHES = 1.40f
+//debug
+val pictogramEventDisables = listOf(
+    PictogramEvent.TENNIS,
+    PictogramEvent.GOLF,
+    PictogramEvent.DIVING,
+    PictogramEvent.RUGBY,
+    PictogramEvent.WRESTLING
+)
+
+const val THRESHOLD_DEGREE_MATCHES = 1.30f
 
 const val MODEL_WIDTH = 257
 const val MODEL_HEIGHT = 257

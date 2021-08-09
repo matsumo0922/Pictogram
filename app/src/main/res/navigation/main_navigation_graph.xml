@@ -32,6 +32,12 @@
             app:destination="@id/startingFragment"
             app:popUpTo="@id/startingFragment"
             app:popUpToInclusive="true"/>
+        <argument
+            android:name="time"
+            app:argType="float" />
+        <argument
+            android:name="rank"
+            app:argType="integer" />
     </fragment>
 
 </navigation>
