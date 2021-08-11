@@ -1,11 +1,11 @@
 package caios.android.pictogram.analyze
 
-import android.content.ContentValues.TAG
 import android.graphics.*
 import android.media.Image
-import android.util.Log
 
 import android.util.Size
+import caios.android.pictogram.data.MODEL_HEIGHT
+import caios.android.pictogram.data.MODEL_WIDTH
 import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
 

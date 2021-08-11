@@ -2,66 +2,36 @@ package caios.android.pictogram.analyze
 
 import android.content.Context
 import android.graphics.Bitmap
+import caios.android.pictogram.data.*
 import org.tensorflow.lite.Interpreter
-import org.tensorflow.lite.gpu.GpuDelegate
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
-import java.nio.MappedByteBuffer
-import java.nio.channels.FileChannel
-import kotlin.math.exp
+import java.util.*
 
-class PoseNetInterpriter(
-    private val context: Context,
-    private val model: Model,
-    private val device: Device
-) {
+class PoseNetInterpriter(context: Context, model: Model, device: Device): Interpriter(context, model, device) {
 
-    private var interpreter: Interpreter? = null
-    private var gpuDelegate: GpuDelegate? = null
+    @Suppress("UNCHECKED_CAST")
+    override fun estimatePosture(bitmap: Bitmap): PostureData {
+        val nonNullInterpreter = getInterpreter()
+        val inputBuffer = createInputBuffer(bitmap)
+        val outputMap = createOutputMap(nonNullInterpreter)
 
-    /*private val outHeatMaps = Array(1) { Array(9) { Array(9) { FloatArray(17) } } }
-    private val outOffsets = Array(1) { Array(9) { Array(9) { FloatArray(34) } } }
-    private val outDisplacementFwd = Array(1) { Array(9) { Array(9) { FloatArray(32) } } }
-    private val outDisplacementBwd = Array(1) { Array(9) { Array(9) { FloatArray(32) } } }*/
+        nonNullInterpreter.runForMultipleInputsOutputs(arrayOf(inputBuffer), outputMap)
 
-    private fun getInterpreter(): Interpreter {
-        interpreter?.let { return it } ?: kotlin.run {
-            interpreter = Interpreter(loadModel(), setUpOption())
-            return interpreter!!
-        }
-    }
+        val heatmaps = outputMap[0] as Array<Array<Array<FloatArray>>>
+        val offsets = outputMap[1] as Array<Array<Array<FloatArray>>>
 
-    private fun loadModel(): MappedByteBuffer {
-        val modelName = when(model) {
-            Model.MOVENET_LIGHTNING -> "movenet_lightning_v3.tflite"
-            Model.MOVENET_THUNDER   -> "movenet_thunder_v3.tflite"
-            Model.POSENET           -> "posenet.tflite"
-        }
+        val height = heatmaps[0].size
+        val width = heatmaps[0][0].size
+        val numKeyPoints = heatmaps[0][0][0].size
 
-        val fileDescriptor = context.resources.assets.openFd(modelName)
-        val inputStream = fileDescriptor.createInputStream()
-        return inputStream.channel.map(FileChannel.MapMode.READ_ONLY, fileDescriptor.startOffset, fileDescriptor.declaredLength)
-    }
+        val keyPositions = getKeyPositions(heatmaps, height, width, numKeyPoints)
+        val (confidenceScores, xCoords, yCoords) = adjustKeyPoints(bitmap, keyPositions, heatmaps, offsets, height, width, numKeyPoints)
 
-    private fun setUpOption(): Interpreter.Options {
-        return Interpreter.Options().apply {
-            setNumThreads(4)
-            when (device) {
-                Device.CPU -> Unit
-                Device.GPU -> {
-                    gpuDelegate = GpuDelegate()
-                    addDelegate(gpuDelegate)
-                }
-                Device.NNAPI -> {
-                    setUseNNAPI(true)
-                }
-            }
-        }
+        return getPosture(bitmap, confidenceScores, xCoords, yCoords, numKeyPoints)
     }
 
     private fun createInputBuffer(bitmap: Bitmap): ByteBuffer {
-        val imageMean = 64.0f
-        val imageStd = 64.0f
         val batchSize = 1
         val bytesPerChannel = 4
         val inputChannel = 3
@@ -75,9 +45,9 @@ class PoseNetInterpriter(
         bitmap.getPixels(pixels, 0, bitmap.width, 0, 0, bitmap.width, bitmap.height)
 
         for (pixelValue in pixels) {
-            inputBuffer.putFloat(((pixelValue shr 16 and 0xFF) - imageMean) / imageStd)
-            inputBuffer.putFloat(((pixelValue shr 8 and 0xFF) - imageMean) / imageStd)
-            inputBuffer.putFloat(((pixelValue and 0xFF) - imageMean) / imageStd)
+            inputBuffer.putFloat(((pixelValue shr 16 and 0xFF) - IMAGE_MEAN) / IMAGE_STD)
+            inputBuffer.putFloat(((pixelValue shr 8 and 0xFF) - IMAGE_MEAN) / IMAGE_STD)
+            inputBuffer.putFloat(((pixelValue and 0xFF) - IMAGE_MEAN) / IMAGE_STD)
         }
 
         return inputBuffer
@@ -166,31 +136,5 @@ class PoseNetInterpriter(
         }
 
         return PostureData(keyPointList.toList(), totalScore / numKeyPoints, bitmap.height, bitmap.width)
-    }
-
-    @Suppress("UNCHECKED_CAST")
-    fun estimatePosture(bitmap: Bitmap): PostureData {
-        val nonNullInterpreter = getInterpreter()
-        val inputBuffer = createInputBuffer(bitmap)
-        val outputMap = createOutputMap(nonNullInterpreter)
-
-        nonNullInterpreter.runForMultipleInputsOutputs(arrayOf(inputBuffer), outputMap)
-
-        val heatmaps = outputMap[0] as Array<Array<Array<FloatArray>>>
-        val offsets = outputMap[1] as Array<Array<Array<FloatArray>>>
-
-        val height = heatmaps[0].size
-        val width = heatmaps[0][0].size
-        val numKeyPoints = heatmaps[0][0][0].size
-
-        val keyPositions = getKeyPositions(heatmaps, height, width, numKeyPoints)
-        val (confidenceScores, xCoords, yCoords) = adjustKeyPoints(bitmap, keyPositions, heatmaps, offsets, height, width, numKeyPoints)
-
-        return getPosture(bitmap, confidenceScores, xCoords, yCoords, numKeyPoints)
-    }
-
-    //シグモイド関数
-    private fun sigmoid(x: Float): Float {
-        return (1.0f / (1.0f + exp(-x)))
     }
 }

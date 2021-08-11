@@ -8,8 +8,8 @@ import androidx.preference.PreferenceFragmentCompat
 import caios.android.pictogram.BuildConfig
 import caios.android.pictogram.R
 import caios.android.pictogram.activity.SettingActivity
-import caios.android.pictogram.analyze.Device
-import caios.android.pictogram.analyze.Model
+import caios.android.pictogram.data.Device
+import caios.android.pictogram.data.Model
 import caios.android.pictogram.global.SettingClass.Companion.ML_MODEL
 import caios.android.pictogram.global.SettingClass.Companion.PROCESSING_METHOD
 import caios.android.pictogram.global.setting

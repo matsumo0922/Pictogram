@@ -5,7 +5,7 @@ import android.app.Dialog
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
 import caios.android.pictogram.R
-import caios.android.pictogram.analyze.Device
+import caios.android.pictogram.data.Device
 import caios.android.pictogram.databinding.DialogErrorBinding
 import caios.android.pictogram.global.SettingClass
 import caios.android.pictogram.global.setting

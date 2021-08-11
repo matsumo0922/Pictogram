@@ -7,6 +7,9 @@ import android.view.SurfaceHolder
 import android.view.SurfaceView
 import androidx.core.content.ContextCompat
 import caios.android.pictogram.R
+import caios.android.pictogram.data.KeyPoint
+import caios.android.pictogram.data.Position
+import caios.android.pictogram.data.PostureData
 import kotlin.math.abs
 import kotlin.math.atan2
 import kotlin.math.sqrt

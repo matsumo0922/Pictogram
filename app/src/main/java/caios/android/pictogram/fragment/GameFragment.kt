@@ -22,6 +22,7 @@ import androidx.navigation.fragment.findNavController
 import caios.android.pictogram.R
 import caios.android.pictogram.analyze.*
 import caios.android.pictogram.analyze.PictogramEvent.*
+import caios.android.pictogram.data.*
 import caios.android.pictogram.databinding.FragmentGameBinding
 import caios.android.pictogram.dialog.CountdownDialog
 import caios.android.pictogram.dialog.ErrorDialog

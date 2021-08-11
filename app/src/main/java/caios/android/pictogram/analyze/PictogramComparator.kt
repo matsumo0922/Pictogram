@@ -4,6 +4,8 @@ import android.content.Context
 import android.util.Log
 import android.util.Size
 import caios.android.pictogram.R
+import caios.android.pictogram.data.KeyPoint
+import caios.android.pictogram.data.Position
 import caios.android.pictogram.utils.LogUtils.TAG
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken

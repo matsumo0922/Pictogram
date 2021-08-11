@@ -5,6 +5,9 @@ import android.content.Context
 import android.graphics.Bitmap
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
+import caios.android.pictogram.data.Device
+import caios.android.pictogram.data.Model
+import caios.android.pictogram.data.PostureData
 import kotlin.system.measureTimeMillis
 
 class PostureEstimator(
@@ -14,7 +17,7 @@ class PostureEstimator(
     private val listener: EstimationListener
 ): ImageAnalysis.Analyzer {
 
-    private val interpriter = PoseNetInterpriter(context, model, device)
+    private val interpriter: Interpriter = Interpriter.getInstance(context, model, device)
 
     @SuppressLint("UnsafeOptInUsageError")
     override fun analyze(image: ImageProxy) {

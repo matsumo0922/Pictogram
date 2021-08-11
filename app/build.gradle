@@ -66,8 +66,9 @@ dependencies {
     implementation 'androidx.camera:camera-camera2:1.1.0-alpha07'
     implementation 'androidx.camera:camera-view:1.0.0-alpha27'
 
-    implementation 'org.tensorflow:tensorflow-lite:2.2.0'
-    implementation 'org.tensorflow:tensorflow-lite-gpu:2.2.0'
+    implementation 'org.tensorflow:tensorflow-lite:2.5.0'
+    implementation 'org.tensorflow:tensorflow-lite-gpu:2.5.0'
+    implementation 'org.tensorflow:tensorflow-lite-support:0.2.0'
 
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'com.google.android.material:material:1.4.0'
