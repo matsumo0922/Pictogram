@@ -216,6 +216,7 @@ class SettingClass(private val context: Context) {
         const val NORMAL_SETTING = "CAIOS-NormalSetting"
         const val CAIOS_ID = "CAIOS-ID"
         const val THEME_APPLICATION = "ThemeApplication"
+        const val ML_MODEL = "MLModel"
         const val PROCESSING_METHOD = "ProcessingMethod"
         const val IS_ENABLE_DEVELOPER_MODE = "isEnableDeveloperMode"
         const val IS_ENABLE_PREMIUM_MODE = "isEnablePremiumMode"

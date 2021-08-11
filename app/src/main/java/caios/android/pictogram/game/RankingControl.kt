@@ -21,7 +21,7 @@ class RankingControl(private val context: Context) {
     }
 
     fun getAllRanking(): List<RankingData> {
-        val rankingStr = setting.getString(PREFERENCE, "Ranking", "")
+        val rankingStr = setting.getString(PREFERENCE, "Ranking", "[]")
         val rankingArray = gson.fromJson<Collection<RankingData>>(rankingStr, object : TypeToken<Collection<RankingData>>(){}.type)
         return rankingArray.toList()
     }

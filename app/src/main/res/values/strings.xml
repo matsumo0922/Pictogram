@@ -57,7 +57,7 @@
     <string name="criticalErrorSum">ゲームを進行できない深刻なエラーが発生しました。</string>
     <string name="debugInformation">デバッグ情報</string>
     <string name="adviceProcessingMethod">処理方法をCPUに変更するとエラーが解消される場合があります。</string>
-    <string name="gameClear">GAME CLEAR</string>
+    <string name="gameClear">GAME CLEAR!!</string>
     <string name="clearTime">クリアタイム</string>
     <string name="ranking">ランキング</string>
     <string name="backToTitle">タイトルへ戻る</string>
@@ -66,5 +66,13 @@
     <string name="failedToRegisterRanking">ランキングの登録に失敗しました</string>
     <string name="previewCamera">プレビューを描写</string>
     <string name="previewCameraSum">カメラから受け取った画像のプレビューを描写します</string>
+    <string name="debugMode">デバッグモード</string>
+    <string name="estimatedAccuracy">推定精度</string>
+    <string name="estimatedAccuracySum">姿勢推定の精度を選択します。設定が高いほど推定精度は向上しますが、FPSが下がります。また「高精度」ではNNAPIが使用できません。</string>
+    <string name="highAccuracy">高精度</string>
+    <string name="middleAccuracy">中精度</string>
+    <string name="lowAccuracy">低精度</string>
+    <string name="changeMethodByHighAccuracyModel">高精度を選択したため、処理方法が「CPU」に変更されました</string>
+    <string name="changeModelByNNAPI">NNAPIを選択したため、推定精度が「中精度」に変更されました</string>
 
 </resources>

@@ -125,6 +125,8 @@ class GameFragment: Fragment(R.layout.fragment_game) {
 
                 findNavController().navigate(GameFragmentDirections.actionGameFragmentToResultFragment(gameTime, ranking))
                 handler.removeCallbacks(timeProcess)
+
+
             }
         } catch (e: Throwable) {
             handler.post { onError(e) }
@@ -142,7 +144,7 @@ class GameFragment: Fragment(R.layout.fragment_game) {
     }
 
     private fun setTestResult(keyPoints: List<KeyPoint>) {
-        if (keyPoints.size == enumValues<BodyPart>().size && childFragmentManager.findFragmentByTag("CountdownDialog") == null) {
+        if ((setting.getBoolean("DebugMode", false) || keyPoints.size == enumValues<BodyPart>().size) && childFragmentManager.findFragmentByTag("CountdownDialog") == null) {
             handler.post {
                 CountdownDialog.build(3) {
                     setTurn(gameTurn)
@@ -171,6 +173,7 @@ class GameFragment: Fragment(R.layout.fragment_game) {
     private fun bindPreview(cameraProvider: ProcessCameraProvider) {
         binding.previewView.implementationMode = PreviewView.ImplementationMode.COMPATIBLE
 
+        val mlModel = Model.valueOf(setting.getString(SettingClass.ML_MODEL, Model.MOVENET_LIGHTNING.name))
         val processingMethod = Device.valueOf(setting.getString(SettingClass.PROCESSING_METHOD, Device.CPU.name))
         val previewSize = Size(binding.surfaceView.width, binding.surfaceView.height)
 
@@ -207,7 +210,7 @@ class GameFragment: Fragment(R.layout.fragment_game) {
             setTargetRotation(binding.previewView.display.rotation)
             setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
         }.build().also {
-            it.setAnalyzer(cameraExecutor, PostureEstimator(requireContext(), processingMethod, estimationListener))
+            it.setAnalyzer(cameraExecutor, PostureEstimator(requireContext(), mlModel, processingMethod, estimationListener))
         }
 
         val orientationEventListener = object : OrientationEventListener(requireContext()) {
@@ -243,7 +246,7 @@ class GameFragment: Fragment(R.layout.fragment_game) {
             Log.d(LogUtils.TAG, "frameUpdate: $score")
         }
 
-        if (score < THRESHOLD_DEGREE_MATCHES) {
+        if (score < THRESHOLD_DEGREE_MATCHES || setting.getBoolean("DebugMode", false)) {
             handler.post {
                 stopAnalyzeFlag = true
                 binding.clearImage.visibility = View.VISIBLE

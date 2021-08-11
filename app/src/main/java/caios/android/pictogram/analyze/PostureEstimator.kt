@@ -3,21 +3,18 @@ package caios.android.pictogram.analyze
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.util.Size
-import android.view.WindowManager
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
-import caios.android.pictogram.R
 import kotlin.system.measureTimeMillis
 
 class PostureEstimator(
-    private val context: Context,
-    private val device: Device,
+    context: Context,
+    model: Model,
+    device: Device,
     private val listener: EstimationListener
 ): ImageAnalysis.Analyzer {
 
-    private val interpriter = PoseNetInterpriter(context, device)
+    private val interpriter = PoseNetInterpriter(context, model, device)
 
     @SuppressLint("UnsafeOptInUsageError")
     override fun analyze(image: ImageProxy) {

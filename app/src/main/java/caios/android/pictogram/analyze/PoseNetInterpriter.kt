@@ -12,6 +12,7 @@ import kotlin.math.exp
 
 class PoseNetInterpriter(
     private val context: Context,
+    private val model: Model,
     private val device: Device
 ) {
 
@@ -25,12 +26,18 @@ class PoseNetInterpriter(
 
     private fun getInterpreter(): Interpreter {
         interpreter?.let { return it } ?: kotlin.run {
-            interpreter = Interpreter(loadModel("posenet.tflite"), setUpOption())
+            interpreter = Interpreter(loadModel(), setUpOption())
             return interpreter!!
         }
     }
 
-    private fun loadModel(modelName: String): MappedByteBuffer {
+    private fun loadModel(): MappedByteBuffer {
+        val modelName = when(model) {
+            Model.MOVENET_LIGHTNING -> "movenet_lightning_v3.tflite"
+            Model.MOVENET_THUNDER   -> "movenet_thunder_v3.tflite"
+            Model.POSENET           -> "posenet.tflite"
+        }
+
         val fileDescriptor = context.resources.assets.openFd(modelName)
         val inputStream = fileDescriptor.createInputStream()
         return inputStream.channel.map(FileChannel.MapMode.READ_ONLY, fileDescriptor.startOffset, fileDescriptor.declaredLength)

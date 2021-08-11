@@ -22,6 +22,10 @@ enum class Device {
     CPU, GPU, NNAPI
 }
 
+enum class Model {
+    MOVENET_LIGHTNING, MOVENET_THUNDER, POSENET
+}
+
 enum class BodyPart {
     NOSE,
     LEFT_EYE,

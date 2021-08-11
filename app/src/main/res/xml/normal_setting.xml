@@ -7,11 +7,25 @@
             android:title="@string/processingMethod"
             android:summary="@string/processingMethodSum" />
 
+        <Preference
+            android:key="MLModel"
+            android:title="@string/estimatedAccuracy"
+            android:summary="@string/estimatedAccuracySum" />
+
         <SwitchPreference
             android:key="PreviewCamera"
             android:title="@string/previewCamera"
             android:summary="@string/previewCameraSum"
             android:defaultValue="true" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/debug">
+
+        <SwitchPreference
+            android:key="DebugMode"
+            android:title="@string/debugMode"
+            android:defaultValue="false" />
+
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/overview">

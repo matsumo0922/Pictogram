@@ -4,13 +4,18 @@ import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import caios.android.pictogram.R
+import caios.android.pictogram.activity.MainActivity
 import caios.android.pictogram.databinding.FragmentResultBinding
 import caios.android.pictogram.utils.autoCleared
 import com.google.android.material.transition.MaterialSharedAxis
+import nl.dionsegijn.konfetti.emitters.StreamEmitter
+import nl.dionsegijn.konfetti.models.Shape
+import nl.dionsegijn.konfetti.models.Size
 
 class ResultFragment: Fragment(R.layout.fragment_result) {
 
@@ -38,26 +43,41 @@ class ResultFragment: Fragment(R.layout.fragment_result) {
         binding.timeText.text = "${getString(R.string.clearTime)}: %.2f ${getString(R.string.second)}".format(args.time)
         binding.rankingText.text = if(args.rank != -1) "${getString(R.string.ranking)}: ${args.rank} ${getString(R.string.rank)}" else getString(R.string.failedToRegisterRanking)
 
+        binding.clearText.setOnClickListener {
+            confettiBurst()
+        }
+
         binding.endButton.setOnClickListener {
             findNavController().navigate(R.id.action_resultFragment_to_startingFragment)
         }
+
+        (activity as MainActivity).onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                findNavController().navigate(R.id.action_resultFragment_to_startingFragment)
+            }
+        })
     }
 
     override fun onResume() {
         super.onResume()
-
-        binding.confettiView.build().apply {
-            addColors(Color.YELLOW, Color.GREEN, Color.MAGENTA, Color.BLUE)
-            setDirection(0.0, 359.0)
-            setSpeed(0.1f)
-            setPosition(-50f, binding.confettiView.width + 50f, -50f, -50f)
-            setFadeOutEnabled(true)
-            streamFor(50, 5000)
-        }
+        confettiBurst()
     }
 
     override fun onPause() {
         super.onPause()
         binding.confettiView.reset()
+    }
+
+    private fun confettiBurst() {
+        binding.confettiView.build().apply {
+            addColors(Color.YELLOW, Color.GREEN, Color.MAGENTA, Color.BLUE)
+            setDirection(0.0, 359.0)
+            setSpeed(1f, 8f)
+            setFadeOutEnabled(true)
+            setTimeToLive(2000L)
+            addShapes(Shape.RECT, Shape.CIRCLE)
+            addSizes(Size(12))
+            setPosition(binding.confettiView.width / 2f, binding.confettiView.height / 2.5f)
+        }.burst(500)
     }
 }

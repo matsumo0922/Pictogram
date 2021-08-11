@@ -2,11 +2,11 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/setting_navigation_graph"
-    app:startDestination="@id/normalSettingFragment">
+    app:startDestination="@id/settingFragment">
 
     <fragment
-        android:id="@+id/normalSettingFragment"
-        android:name="caios.android.pictogram.fragment.NormalSettingFragment"
+        android:id="@+id/settingFragment"
+        android:name="caios.android.pictogram.fragment.SettingFragment"
         android:label="NormalSettingFragment" />
 
 </navigation>

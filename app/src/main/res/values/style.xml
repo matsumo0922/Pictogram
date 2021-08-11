@@ -14,9 +14,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
 
-        <item name="bottomSheetDialogTheme">
-            @style/Theme.MaterialComponents.DayNight.BottomSheetDialog
-        </item>
+        <item name="bottomSheetDialogTheme">@style/Theme.MaterialComponents.DayNight.BottomSheetDialog</item>
 
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
@@ -34,17 +32,9 @@
     </style>
 
     <style name="AppTheme.ActionBar" parent="Theme.MaterialComponents.DayNight">
-        <item name="colorPrimary">@color/colorAccent</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:navigationBarColor">@android:color/transparent</item>
-
-        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:windowContentTransitions">true</item>
-        <item name="android:windowActivityTransitions">true</item>
-        <item name="android:windowSharedElementsUseOverlay">true</item>
     </style>
 
 
