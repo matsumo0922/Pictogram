@@ -28,7 +28,7 @@ class PoseNetInterpriter(context: Context, model: Model, device: Device): Interp
         val keyPositions = getKeyPositions(heatmaps, height, width, numKeyPoints)
         val (confidenceScores, xCoords, yCoords) = adjustKeyPoints(bitmap, keyPositions, heatmaps, offsets, height, width, numKeyPoints)
 
-        return getPosture(bitmap, confidenceScores, xCoords, yCoords, numKeyPoints)
+        return getPosture(confidenceScores, xCoords, yCoords, numKeyPoints)
     }
 
     private fun createInputBuffer(bitmap: Bitmap): ByteBuffer {
@@ -120,7 +120,7 @@ class PoseNetInterpriter(context: Context, model: Model, device: Device): Interp
     }
 
     //姿勢データを取得
-    private fun getPosture(bitmap: Bitmap, confidenceScores: FloatArray, xCoords: IntArray, yCoords: IntArray, numKeyPoints: Int): PostureData {
+    private fun getPosture(confidenceScores: FloatArray, xCoords: IntArray, yCoords: IntArray, numKeyPoints: Int): PostureData {
         val keyPointList = Array(numKeyPoints) { KeyPoint() }
         var totalScore = 0.0f
 
@@ -135,6 +135,6 @@ class PoseNetInterpriter(context: Context, model: Model, device: Device): Interp
             }
         }
 
-        return PostureData(keyPointList.toList(), totalScore / numKeyPoints, bitmap.height, bitmap.width)
+        return PostureData(keyPointList.toList(), totalScore / numKeyPoints)
     }
 }

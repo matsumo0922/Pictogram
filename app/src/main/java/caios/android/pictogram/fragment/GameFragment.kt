@@ -10,6 +10,7 @@ import android.util.Size
 import android.view.OrientationEventListener
 import android.view.Surface
 import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.annotation.DrawableRes
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
@@ -20,8 +21,9 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import caios.android.pictogram.R
-import caios.android.pictogram.analyze.*
-import caios.android.pictogram.analyze.PictogramEvent.*
+import caios.android.pictogram.activity.MainActivity
+import caios.android.pictogram.analyze.PictogramComparator
+import caios.android.pictogram.analyze.PostureEstimator
 import caios.android.pictogram.data.*
 import caios.android.pictogram.databinding.FragmentGameBinding
 import caios.android.pictogram.dialog.CountdownDialog
@@ -32,6 +34,10 @@ import caios.android.pictogram.global.setting
 import caios.android.pictogram.utils.LogUtils
 import caios.android.pictogram.utils.PermissionUtils
 import caios.android.pictogram.utils.autoCleared
+import caios.android.pictogram.view.DebugSurfaceView
+import caios.android.pictogram.view.PostureSurfaceView
+import caios.android.pictogram.view.ResultSurfaceView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.transition.MaterialSharedAxis
 import com.google.common.util.concurrent.ListenableFuture
 import java.util.*
@@ -43,7 +49,7 @@ class GameFragment: Fragment(R.layout.fragment_game) {
     private var binding by autoCleared<FragmentGameBinding>()
     private val handler = Handler(Looper.myLooper()!!)
 
-    private lateinit var postureSurfaceView: PostureSurfaceView
+    private lateinit var postureSurfaceView: ResultSurfaceView
     private lateinit var pictogramComparator: PictogramComparator
 
     private lateinit var cameraProviderFuture: ListenableFuture<ProcessCameraProvider>
@@ -85,16 +91,29 @@ class GameFragment: Fragment(R.layout.fragment_game) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         binding = FragmentGameBinding.bind(view)
-        postureSurfaceView = PostureSurfaceView(binding.surfaceView)
+        postureSurfaceView = if(setting.getBoolean("DebugMode", false)) DebugSurfaceView(binding.surfaceView) else PostureSurfaceView(binding.surfaceView)
 
         initGame()
         setTest()
 
-        if(PermissionUtils.isAllowed(requireContext(), PermissionUtils.requestPermissions)) {
-            setupCamera()
-        } else {
-            findNavController().navigateUp()
-        }
+        if(PermissionUtils.isAllowed(requireContext(), PermissionUtils.requestPermissions)) setupCamera()
+        else findNavController().navigateUp()
+
+        (activity as MainActivity).onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                MaterialAlertDialogBuilder(requireContext()).apply {
+                    setTitle(R.string.caution)
+                    setMessage(R.string.cancelGameMessage)
+                    setPositiveButton(R.string.stopGame) { _, _ ->
+                        stopAnalyzeFlag = true
+                        handler.removeCallbacks(timeProcess)
+
+                        findNavController().popBackStack()
+                    }
+                    setNegativeButton(R.string.continueGame, null)
+                }.show()
+            }
+        })
     }
 
     override fun onDestroy() {
@@ -103,7 +122,7 @@ class GameFragment: Fragment(R.layout.fragment_game) {
     }
 
     private fun initGame() {
-        val eventList = enumValues<PictogramEvent>().toMutableList().filter { event -> pictogramEventDisables.find { it == event } == null }
+        val eventList = enumValues<PictogramEvent>().toMutableList().filter { it !in pictogramEventDisables }
         val randomEventList = eventList.shuffled().take(gameMaxTurn)
 
         gameEventList.clear()
@@ -126,8 +145,6 @@ class GameFragment: Fragment(R.layout.fragment_game) {
 
                 findNavController().navigate(GameFragmentDirections.actionGameFragmentToResultFragment(gameTime, ranking))
                 handler.removeCallbacks(timeProcess)
-
-
             }
         } catch (e: Throwable) {
             handler.post { onError(e) }
@@ -243,11 +260,7 @@ class GameFragment: Fragment(R.layout.fragment_game) {
 
     @SuppressLint("SetTextI18n")
     private fun frameUpdate(score: Float) {
-        if(score < 10f) {
-            Log.d(LogUtils.TAG, "frameUpdate: $score")
-        }
-
-        if (score < THRESHOLD_DEGREE_MATCHES || setting.getBoolean("DebugMode", false)) {
+        if (score < THRESHOLD_DEGREE_MATCHES) {
             handler.post {
                 stopAnalyzeFlag = true
                 binding.clearImage.visibility = View.VISIBLE
@@ -276,56 +289,56 @@ class GameFragment: Fragment(R.layout.fragment_game) {
 
     private fun getEventName(event: PictogramEvent): String {
         return when(event) {
-            ARCHERY             -> getString(R.string.archery)
-            WEIGHTLIFTING       -> getString(R.string.weightlifting)
-            VOLLEYBALL          -> getString(R.string.volleyball)
-            TENNIS              -> getString(R.string.tennis)
-            ATHLETICS           -> getString(R.string.athletics)
-            BADMINTON           -> getString(R.string.badminton)
-            BASKETBALL          -> getString(R.string.basketball)
-            BEACH_VOLLEYBALL    -> getString(R.string.beachVolleyball)
-            BOXING              -> getString(R.string.boxing)
-            CYCLING             -> getString(R.string.cycling)
-            DIVING              -> getString(R.string.diving)
-            FENCING             -> getString(R.string.fencing)
-            FOOTBALL            -> getString(R.string.football)
-            GOLF                -> getString(R.string.golf)
-            HANDBALL            -> getString(R.string.handball)
-            HOCKEY              -> getString(R.string.hockey)
-            RHYTHMIC_GYMNASTICS -> getString(R.string.rhythmicGymnastics)
-            RUGBY               -> getString(R.string.rugby)
-            SHOOTING            -> getString(R.string.shooting)
-            TABLE_TENNIS        -> getString(R.string.tableTennis)
-            TAEKWONDO           -> getString(R.string.taekwondo)
-            WRESTLING           -> getString(R.string.wrestling)
+            PictogramEvent.ARCHERY             -> getString(R.string.archery)
+            PictogramEvent.WEIGHTLIFTING       -> getString(R.string.weightlifting)
+            PictogramEvent.VOLLEYBALL          -> getString(R.string.volleyball)
+            PictogramEvent.TENNIS              -> getString(R.string.tennis)
+            PictogramEvent.ATHLETICS           -> getString(R.string.athletics)
+            PictogramEvent.BADMINTON           -> getString(R.string.badminton)
+            PictogramEvent.BASKETBALL          -> getString(R.string.basketball)
+            PictogramEvent.BEACH_VOLLEYBALL    -> getString(R.string.beachVolleyball)
+            PictogramEvent.BOXING              -> getString(R.string.boxing)
+            PictogramEvent.CYCLING             -> getString(R.string.cycling)
+            PictogramEvent.DIVING              -> getString(R.string.diving)
+            PictogramEvent.FENCING             -> getString(R.string.fencing)
+            PictogramEvent.FOOTBALL            -> getString(R.string.football)
+            PictogramEvent.GOLF                -> getString(R.string.golf)
+            PictogramEvent.HANDBALL            -> getString(R.string.handball)
+            PictogramEvent.HOCKEY              -> getString(R.string.hockey)
+            PictogramEvent.RHYTHMIC_GYMNASTICS -> getString(R.string.rhythmicGymnastics)
+            PictogramEvent.RUGBY               -> getString(R.string.rugby)
+            PictogramEvent.SHOOTING            -> getString(R.string.shooting)
+            PictogramEvent.TABLE_TENNIS        -> getString(R.string.tableTennis)
+            PictogramEvent.TAEKWONDO           -> getString(R.string.taekwondo)
+            PictogramEvent.WRESTLING           -> getString(R.string.wrestling)
         }
     }
 
     @DrawableRes
     private fun getEventPictogram(event: PictogramEvent): Int {
         return when(event) {
-            ARCHERY             -> R.drawable.vec_archery
-            WEIGHTLIFTING       -> R.drawable.vec_weightlifting
-            VOLLEYBALL          -> R.drawable.vec_volleyball
-            TENNIS              -> R.drawable.vec_tennis
-            ATHLETICS           -> R.drawable.vec_athletics
-            BADMINTON           -> R.drawable.vec_badminton
-            BASKETBALL          -> R.drawable.vec_basketball
-            BEACH_VOLLEYBALL    -> R.drawable.vec_beach_volleyball
-            BOXING              -> R.drawable.vec_boxing
-            CYCLING             -> R.drawable.vec_cycling_road
-            DIVING              -> R.drawable.vec_diving
-            FENCING             -> R.drawable.vec_fencing
-            FOOTBALL            -> R.drawable.vec_football
-            GOLF                -> R.drawable.vec_golf
-            HANDBALL            -> R.drawable.vec_handball
-            HOCKEY              -> R.drawable.vec_hockey
-            RHYTHMIC_GYMNASTICS -> R.drawable.vec_rhythmic_gymnastics
-            RUGBY               -> R.drawable.vec_rugby_sevens
-            SHOOTING            -> R.drawable.vec_shooting
-            TABLE_TENNIS        -> R.drawable.vec_table_tennis
-            TAEKWONDO           -> R.drawable.vec_taekwondo
-            WRESTLING           -> R.drawable.vec_weightlifting
+            PictogramEvent.ARCHERY             -> R.drawable.vec_archery
+            PictogramEvent.WEIGHTLIFTING       -> R.drawable.vec_weightlifting
+            PictogramEvent.VOLLEYBALL          -> R.drawable.vec_volleyball
+            PictogramEvent.TENNIS              -> R.drawable.vec_tennis
+            PictogramEvent.ATHLETICS           -> R.drawable.vec_athletics
+            PictogramEvent.BADMINTON           -> R.drawable.vec_badminton
+            PictogramEvent.BASKETBALL          -> R.drawable.vec_basketball
+            PictogramEvent.BEACH_VOLLEYBALL    -> R.drawable.vec_beach_volleyball
+            PictogramEvent.BOXING              -> R.drawable.vec_boxing
+            PictogramEvent.CYCLING             -> R.drawable.vec_cycling_road
+            PictogramEvent.DIVING              -> R.drawable.vec_diving
+            PictogramEvent.FENCING             -> R.drawable.vec_fencing
+            PictogramEvent.FOOTBALL            -> R.drawable.vec_football
+            PictogramEvent.GOLF                -> R.drawable.vec_golf
+            PictogramEvent.HANDBALL            -> R.drawable.vec_handball
+            PictogramEvent.HOCKEY              -> R.drawable.vec_hockey
+            PictogramEvent.RHYTHMIC_GYMNASTICS -> R.drawable.vec_rhythmic_gymnastics
+            PictogramEvent.RUGBY               -> R.drawable.vec_rugby_sevens
+            PictogramEvent.SHOOTING            -> R.drawable.vec_shooting
+            PictogramEvent.TABLE_TENNIS        -> R.drawable.vec_table_tennis
+            PictogramEvent.TAEKWONDO           -> R.drawable.vec_taekwondo
+            PictogramEvent.WRESTLING           -> R.drawable.vec_weightlifting
         }
     }
 }

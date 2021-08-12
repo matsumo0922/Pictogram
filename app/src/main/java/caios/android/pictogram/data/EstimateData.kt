@@ -3,8 +3,6 @@ package caios.android.pictogram.data
 data class PostureData (
     val keyPoints: List<KeyPoint>,
     val score: Float,
-    val parentHeight: Int,
-    val parentWidth: Int
 )
 
 data class KeyPoint (
@@ -26,7 +24,7 @@ enum class Model {
     MOVENET_LIGHTNING, MOVENET_THUNDER, POSENET
 }
 
-const val THRESHOLD_DEGREE_MATCHES = 2.80f
+const val THRESHOLD_DEGREE_MATCHES = 1.75f
 
 const val MODEL_WIDTH = 257
 const val MODEL_HEIGHT = 257

@@ -65,6 +65,11 @@ class SettingFragment: PreferenceFragmentCompat() {
                                 setting.setString(ML_MODEL, Model.MOVENET_LIGHTNING.name)
                                 ToastUtils.show(requireContext(), R.string.changeModelByNNAPI)
                             }
+
+                            if(item == Device.GPU && Model.valueOf(setting.getString(ML_MODEL, Model.MOVENET_LIGHTNING.name)) != Model.POSENET) {
+                                setting.setString(ML_MODEL, Model.POSENET.name)
+                                ToastUtils.show(requireContext(), R.string.changeModelByGPU)
+                            }
                         }
                     }
                 }
@@ -90,9 +95,14 @@ class SettingFragment: PreferenceFragmentCompat() {
                         if(selected != item) {
                             setting.setString(ML_MODEL, item.name)
 
-                            if(item == Model.MOVENET_THUNDER && Device.valueOf(setting.getString(PROCESSING_METHOD, Device.CPU.name)) == Device.NNAPI) {
+                            if(item == Model.MOVENET_THUNDER && Device.valueOf(setting.getString(PROCESSING_METHOD, Device.CPU.name)) != Device.CPU) {
                                 setting.setString(PROCESSING_METHOD, Device.CPU.name)
                                 ToastUtils.show(requireContext(), R.string.changeMethodByHighAccuracyModel)
+                            }
+
+                            if(item == Model.MOVENET_LIGHTNING && Device.valueOf(setting.getString(PROCESSING_METHOD, Device.CPU.name)) == Device.GPU) {
+                                setting.setString(PROCESSING_METHOD, Device.CPU.name)
+                                ToastUtils.show(requireContext(), R.string.changeMethodByMiddleAccuracyModel)
                             }
                         }
                     }

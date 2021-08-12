@@ -1,26 +1,29 @@
-package caios.android.pictogram.analyze
+package caios.android.pictogram.view
 
 import android.annotation.SuppressLint
 import android.graphics.*
 import android.util.Size
-import android.view.SurfaceHolder
 import android.view.SurfaceView
-import androidx.core.content.ContextCompat
-import caios.android.pictogram.R
-import caios.android.pictogram.data.KeyPoint
-import caios.android.pictogram.data.Position
-import caios.android.pictogram.data.PostureData
+import caios.android.pictogram.data.*
 import kotlin.math.abs
 import kotlin.math.atan2
 import kotlin.math.sqrt
 
 @SuppressLint("ViewConstructor")
-class PostureSurfaceView(surfaceView: SurfaceView) : SurfaceView(surfaceView.context), SurfaceHolder.Callback {
+class PostureSurfaceView(surfaceView: SurfaceView) : ResultSurfaceView(surfaceView) {
 
-    private val surfaceHolder = surfaceView.holder
-    private val paint = Paint()
+    companion object {
+        const val MIN_CONFIDENCE_SCORE_FACE = 0.2f
+        const val MIN_CONFIDENCE_SCORE_BODY = 0.2f
+    }
 
-    private val minConfidence = 0.5f
+    private val pictogramFaceParts = listOf(
+        BodyPart.RIGHT_EYE,
+        BodyPart.LEFT_EYE,
+        BodyPart.RIGHT_EAR,
+        BodyPart.LEFT_EAR,
+        BodyPart.NOSE
+    )
 
     //各パーツを顔の何倍で描写するか
     private val pictogramPartsSize = mapOf(
@@ -38,26 +41,31 @@ class PostureSurfaceView(surfaceView: SurfaceView) : SurfaceView(surfaceView.con
         BodyPart.LEFT_ANKLE to 0.3f,
     )
 
-    init {
-        surfaceHolder.addCallback(this)
-        surfaceHolder.setFormat(PixelFormat.TRANSPARENT)
-        surfaceView.setZOrderOnTop(true)
-        setPaint()
+    override fun drawPosture(postureData: PostureData, bitmap: Bitmap, viewSize: Size, time: Long): List<KeyPoint> {
+        val canvas: Canvas? = surfaceHolder.lockCanvas()
+        val scaleX = viewSize.width.toFloat() / bitmap.width
+        val scaleY = viewSize.height.toFloat() / bitmap.height
+
+        canvas?.drawColor(0, PorterDuff.Mode.CLEAR)
+
+        val drawKeyPoints = filterKeyPoints(postureData.keyPoints, scaleX, scaleY)
+        val faceSize = drawFace(canvas, drawKeyPoints)
+
+        drawBodyPoint(canvas, drawKeyPoints, faceSize)
+        drawBodyJoint(canvas, drawKeyPoints, faceSize)
+
+        canvas?.drawText("FPS: %.2f".format(1 / (time.toDouble() / 1000)), 0f * scaleX, 15f * scaleY, paint)
+
+        surfaceHolder.unlockCanvasAndPost(canvas ?: return emptyList())
+
+        return drawKeyPoints
     }
 
-    override fun surfaceCreated(holder: SurfaceHolder) {
-        surfaceHolder.setFormat(PixelFormat.TRANSPARENT)
-    }
-
-    override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) = Unit
-
-    override fun surfaceDestroyed(holder: SurfaceHolder) = Unit
-
-    private fun filterKeyPoints(keyPoints: List<KeyPoint>, scaleX: Float, scaleY: Float, thresholds: Float): List<KeyPoint> {
+    private fun filterKeyPoints(keyPoints: List<KeyPoint>, scaleX: Float, scaleY: Float): List<KeyPoint> {
         val filteredList = mutableListOf<KeyPoint>()
 
         for (keyPoint in keyPoints) {
-            if (keyPoint.score > thresholds) {
+            if (keyPoint.score > if(keyPoint.bodyPart in pictogramFaceParts) MIN_CONFIDENCE_SCORE_FACE else MIN_CONFIDENCE_SCORE_BODY) {
                 filteredList.add(KeyPoint(keyPoint.bodyPart, rescalePosition(keyPoint.position, scaleX, scaleY), keyPoint.score))
             }
         }
@@ -66,29 +74,32 @@ class PostureSurfaceView(surfaceView: SurfaceView) : SurfaceView(surfaceView.con
     }
 
     private fun drawFace(canvas: Canvas?, keyPoints: List<KeyPoint>): Float {
-        val rightEarPosition = keyPoints.find { it.bodyPart == BodyPart.RIGHT_EAR }?.position
-        val leftEarPosition = keyPoints.find { it.bodyPart == BodyPart.LEFT_EAR }?.position
-        val nosePosition = keyPoints.find { it.bodyPart == BodyPart.NOSE }?.position
-        val earPosition = rightEarPosition ?: leftEarPosition
+        val faceParts = mutableListOf<KeyPoint>()
+        var sumX = 0f
+        var sumY = 0f
+        var count = 0f
 
-        var radius = 0f
+        for(part in pictogramFaceParts) {
+            keyPoints.find { it.bodyPart == part }?.let {
+                faceParts.add(it)
 
-        if (earPosition != null && nosePosition != null && (rightEarPosition == null || leftEarPosition == null)) {
-            val distance = getDistance(nosePosition, earPosition)
-            val centerX = (nosePosition.x + earPosition.x) / 2f
-            val centerY = (nosePosition.y + earPosition.y) / 2f
+                if(it.bodyPart != BodyPart.LEFT_EAR && it.bodyPart != BodyPart.RIGHT_EAR) {
+                    sumX += it.position.x
+                    sumY += it.position.y
+                    count++
+                }
+            }
+        }
 
-            radius = distance / 1.1f
+        val center = Position((sumX / count).toInt(), (sumY / count).toInt())
+        val distanceList = faceParts.map { getDistance(it.position, center) }.sortedDescending()
+        val radius = distanceList.take(2).average().toFloat() * 1.2f
 
-            canvas?.drawCircle(centerX, centerY, radius, paint)
-        } else if (nosePosition != null && rightEarPosition != null && leftEarPosition != null) {
-            val distance = getDistance(leftEarPosition, rightEarPosition)
-            val centerX = (nosePosition.x + rightEarPosition.x + leftEarPosition.x) / 3f
-            val centerY = (nosePosition.y + rightEarPosition.y + leftEarPosition.y) / 3f
+        canvas?.drawCircle(center.x.toFloat(), center.y.toFloat(), radius, paint)
+        canvas?.drawCircle(center.x.toFloat(), center.y.toFloat(), 12f, Paint().apply { color = Color.RED })
 
-            radius = distance / 1.5f
-
-            canvas?.drawCircle(centerX, centerY, radius, paint)
+        for (part in faceParts) {
+            canvas?.drawCircle(part.position.x.toFloat(), part.position.y.toFloat(), 12f, Paint().apply { color = Color.BLUE })
         }
 
         return radius
@@ -134,32 +145,6 @@ class PostureSurfaceView(surfaceView: SurfaceView) : SurfaceView(surfaceView.con
         }
     }
 
-    fun drawPosture(postureData: PostureData, bitmap: Bitmap, viewSize: Size, time: Long): List<KeyPoint> {
-        val canvas: Canvas? = surfaceHolder.lockCanvas()
-        val scaleX = viewSize.width.toFloat() / bitmap.width
-        val scaleY = viewSize.height.toFloat() / bitmap.height
-
-        canvas?.drawColor(0, PorterDuff.Mode.CLEAR)
-
-        val drawKeyPoints = filterKeyPoints(postureData.keyPoints, scaleX, scaleY, minConfidence)
-        val faceSize = drawFace(canvas, drawKeyPoints)
-
-        drawBodyPoint(canvas, drawKeyPoints, faceSize)
-        drawBodyJoint(canvas, drawKeyPoints, faceSize)
-
-        canvas?.drawText("FPS: %.2f".format(1 / (time.toDouble() / 1000)), 0f * scaleX, 15f * scaleY, paint)
-
-        surfaceHolder.unlockCanvasAndPost(canvas ?: return emptyList())
-
-        return drawKeyPoints
-    }
-
-    private fun setPaint() {
-        paint.color = ContextCompat.getColor(context, R.color.colorAccentGreen)
-        paint.strokeWidth = 12f
-        paint.textSize = 34f
-    }
-
     private fun rescalePosition(position: Position, scaleX: Float, scaleY: Float): Position {
         return Position((position.x * scaleX).toInt(), (position.y * scaleY).toInt())
     }
@@ -185,11 +170,11 @@ class PostureSurfaceView(surfaceView: SurfaceView) : SurfaceView(surfaceView.con
             pointAndAngleMap.add(point to if (angle >= 0) angle else 360 + angle)
         }
 
-        val nextPoint = pointAndAngleMap.minByOrNull { it.second }!!.first
+        val nextPoint = pointAndAngleMap.minByOrNull { it.second }?.first
         val nextChainFlag = chainFlag && representativePoint != maxPointF
         val newHullPoints = hullPoints.toMutableList().apply { add(representativePoint) }
 
-        return if(nextPoint == minPointF) newHullPoints else sortByJarvis(points, nextPoint, maxPointF, minPointF, nextChainFlag, newHullPoints)
+        return if(nextPoint == null || nextPoint == minPointF) newHullPoints else sortByJarvis(points, nextPoint, maxPointF, minPointF, nextChainFlag, newHullPoints)
     }
 
     private fun getExternalCommonTangent(

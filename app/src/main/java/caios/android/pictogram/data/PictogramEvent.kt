@@ -25,6 +25,7 @@ enum class PictogramEvent {
     WRESTLING
 }
 
+// Json側との紐付け
 val pictogramEventName = mapOf(
     PictogramEvent.ARCHERY to "Archery",
     PictogramEvent.WEIGHTLIFTING to "Weightlifting",
@@ -50,12 +51,10 @@ val pictogramEventName = mapOf(
     PictogramEvent.WRESTLING to "Wrestling"
 )
 
-//debug
+// 判定精度や人体の構造的に無理なやつを除く（せっかく準備したけど）
 val pictogramEventDisables = listOf(
     PictogramEvent.TENNIS,
-    PictogramEvent.DIVING,
-    PictogramEvent.RHYTHMIC_GYMNASTICS,
+    PictogramEvent.BEACH_VOLLEYBALL,
     PictogramEvent.RUGBY,
-    PictogramEvent.TAEKWONDO,
     PictogramEvent.WRESTLING
 )

@@ -68,11 +68,18 @@
     <string name="previewCameraSum">カメラから受け取った画像のプレビューを描写します</string>
     <string name="debugMode">デバッグモード</string>
     <string name="estimatedAccuracy">推定精度</string>
-    <string name="estimatedAccuracySum">姿勢推定の精度を選択します。設定が高いほど推定精度は向上しますが、FPSが下がります。また「高精度」ではNNAPIが使用できません。</string>
+    <string name="estimatedAccuracySum">姿勢推定の精度を選択します。設定が高いほど推定精度は向上しますが、FPSが下がります。また「高精度」ではNNAPIとGPUが使用できません。「中精度」ではGPUが使用できません。</string>
     <string name="highAccuracy">高精度</string>
     <string name="middleAccuracy">中精度</string>
     <string name="lowAccuracy">低精度</string>
     <string name="changeMethodByHighAccuracyModel">高精度を選択したため、処理方法が「CPU」に変更されました</string>
+    <string name="changeMethodByMiddleAccuracyModel">中精度を選択したため、処理方法が「CPU」に変更されました</string>
     <string name="changeModelByNNAPI">NNAPIを選択したため、推定精度が「中精度」に変更されました</string>
+    <string name="changeModelByGPU">GPUを選択したため、推定精度が「低精度」に変更されました</string>
+    <string name="caution">注意</string>
+    <string name="cancelGameMessage">ゲームが進行中です。中止しますか？</string>
+    <string name="cancel">キャンセル</string>
+    <string name="continueGame">続行</string>
+    <string name="stopGame">中止</string>
 
 </resources>

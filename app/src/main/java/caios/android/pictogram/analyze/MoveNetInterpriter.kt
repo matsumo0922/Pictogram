@@ -9,8 +9,24 @@ import org.tensorflow.lite.support.image.TensorImage
 import org.tensorflow.lite.support.image.ops.ResizeOp
 import org.tensorflow.lite.support.image.ops.ResizeWithCropOrPadOp
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
+import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.min
 
 class MoveNetInterpriter(context: Context, model: Model, device: Device): Interpriter(context, model, device){
+
+    companion object {
+        private const val MIN_CROP_KEYPOINT_SCORE = 0.2f
+        private const val TORSO_EXPANSION_RATIO = 1.9f
+        private const val BODY_EXPANSION_RATIO = 1.2f
+    }
+
+    private data class TorsoAndBodyDistance(
+        val maxTorsoXDistance: Float,
+        val maxTorsoYDistance: Float,
+        val maxBodyXDistance: Float,
+        val maxBodyYDistance: Float
+    )
 
     private val interpriter = getInterpreter()
     private val inputWidth = interpriter.getInputTensor(0).shape()[1]
@@ -28,8 +44,13 @@ class MoveNetInterpriter(context: Context, model: Model, device: Device): Interp
 
         interpriter.run(inputTensorImage.tensorBuffer.buffer, outputTensorImage.buffer)
 
-        val (keyPoints, positions, scoreSum) = getKeyPoints(outputTensorImage.floatArray, outputShape[2], detectBitmap.width, detectBitmap.height)
+        val keyPointsCount = outputShape[2]
+        val (keyPoints, positions, scoreSum) = getKeyPoints(outputTensorImage.floatArray, keyPointsCount, detectBitmap.width, detectBitmap.height)
         val transformedKeyPoints = transformPositions(cropRect, keyPoints, positions)
+
+        cropRegion = determineNextRegion(transformedKeyPoints, bitmap.width, bitmap.height)
+
+        return PostureData(transformedKeyPoints, scoreSum / keyPointsCount)
     }
 
     // indexはBodyPartの順序に対応。BodyPartの順序いじったら死ぬ。Kotlinの言語仕様変わったら死ぬ。
@@ -68,10 +89,77 @@ class MoveNetInterpriter(context: Context, model: Model, device: Device): Interp
         }
 
         for(index in keyPoints.indices) {
-            newKeyPoints[index].position = Position(points[index * 2].toInt(), points[index * + 1].toInt())
+            newKeyPoints[index].position = Position(points[index * 2].toInt(), points[index * 2 + 1].toInt())
         }
 
         return newKeyPoints
+    }
+
+    private fun determineNextRegion(keyPoints: List<KeyPoint>, width: Int, height: Int): RectF {
+        takeIf { isTorsoVisible(keyPoints) } ?: return initRegion(width, height)
+
+        val centerX = (keyPoints[BodyPart.LEFT_HIP.ordinal].position.x + keyPoints[BodyPart.RIGHT_HIP.ordinal].position.x) / 2f
+        val centerY = (keyPoints[BodyPart.LEFT_HIP.ordinal].position.y + keyPoints[BodyPart.RIGHT_HIP.ordinal].position.y) / 2f
+
+        val targetKeyPoints = keyPoints.map { KeyPoint(it.bodyPart, Position(it.position.x * width, it.position.y * height), it.score) }
+        val torsoAndBodyDistance = getTorsoAndBodyDistance(keyPoints, targetKeyPoints, centerX, centerY)
+
+        val originalDistanceList = listOf(centerX, width - centerX, centerY, height - centerY)
+        val scaledDistanceList = listOf(
+            torsoAndBodyDistance.maxTorsoXDistance * TORSO_EXPANSION_RATIO,
+            torsoAndBodyDistance.maxTorsoYDistance * TORSO_EXPANSION_RATIO,
+            torsoAndBodyDistance.maxBodyXDistance * BODY_EXPANSION_RATIO,
+            torsoAndBodyDistance.maxBodyYDistance * BODY_EXPANSION_RATIO
+        )
+
+        val cropLengthHalf = min(scaledDistanceList.maxOrNull() ?: 0f, originalDistanceList.maxOrNull() ?: 0f)
+        val cropCorner = Pair(centerX - cropLengthHalf, centerY - cropLengthHalf)
+
+        return if(cropLengthHalf > max(width, height) / 2f) initRegion(width, height) else RectF(
+            cropCorner.first / width,
+            cropCorner.second / height,
+            (cropCorner.first + cropLengthHalf * 2) / width,
+            (cropCorner.second * cropLengthHalf * 2) / height
+        )
+    }
+
+    // このフレームで胴体（肩か腰）が正確に予測できているかを返す
+    // indexはBodyPartの順序に対応。BodyPartの順序いじったら死ぬ。Kotlinの言語仕様変わったら死ぬ。
+    private fun isTorsoVisible(keyPoints: List<KeyPoint>): Boolean {
+        val leftHipVisible = keyPoints[BodyPart.LEFT_HIP.ordinal].score > MIN_CROP_KEYPOINT_SCORE
+        val rightHipVisible = keyPoints[BodyPart.RIGHT_HIP.ordinal].score > MIN_CROP_KEYPOINT_SCORE
+        val leftShoulderVisible = keyPoints[BodyPart.LEFT_SHOULDER.ordinal].score > MIN_CROP_KEYPOINT_SCORE
+        val rightShoulderVisible = keyPoints[BodyPart.RIGHT_SHOULDER.ordinal].score > MIN_CROP_KEYPOINT_SCORE
+
+        return ((leftHipVisible || rightHipVisible) && (leftShoulderVisible || rightShoulderVisible))
+    }
+
+    private fun getTorsoAndBodyDistance(keyPoints: List<KeyPoint>, targetPoints: List<KeyPoint>, centerX: Float, centerY: Float): TorsoAndBodyDistance {
+        var maxTorsoXDistance = 0f
+        var maxTorsoYDistance = 0f
+
+        for(index in listOf(BodyPart.LEFT_HIP.ordinal, BodyPart.RIGHT_HIP.ordinal, BodyPart.LEFT_SHOULDER.ordinal, BodyPart.RIGHT_SHOULDER.ordinal)) {
+            val distanceX = abs(centerX - targetPoints[index].position.x)
+            val distanceY = abs(centerY - targetPoints[index].position.y)
+
+            if(distanceX > maxTorsoXDistance) maxTorsoXDistance = distanceX
+            if(distanceY > maxTorsoYDistance) maxTorsoYDistance = distanceY
+        }
+
+        var maxBodyXDistance = 0f
+        var maxBodyYDistance = 0f
+
+        for(index in keyPoints.indices) {
+            if(keyPoints[index].score < MIN_CROP_KEYPOINT_SCORE) continue
+
+            val distanceX = abs(centerX - keyPoints[index].position.x)
+            val distanceY = abs(centerY - keyPoints[index].position.y)
+
+            if(distanceX > maxBodyXDistance) maxBodyXDistance = distanceX
+            if(distanceY > maxBodyYDistance) maxBodyYDistance = distanceY
+        }
+
+        return TorsoAndBodyDistance(maxTorsoXDistance, maxTorsoYDistance, maxBodyXDistance, maxBodyYDistance)
     }
 
     private fun createInputImage(bitmap: Bitmap, width: Int, height: Int): TensorImage {
