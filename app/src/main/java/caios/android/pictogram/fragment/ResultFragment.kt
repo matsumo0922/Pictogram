@@ -48,7 +48,7 @@ class ResultFragment: Fragment(R.layout.fragment_result) {
         returnTransition = returnSharedAxisTransition
 
         exitTransition = enterSharedAxisTransition
-        reenterTransition = returnSharedAxisTransitions
+        reenterTransition = returnSharedAxisTransition
     }
 
     @SuppressLint("SetTextI18n")

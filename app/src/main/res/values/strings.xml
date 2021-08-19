@@ -81,5 +81,7 @@
     <string name="cancel">キャンセル</string>
     <string name="continueGame">続行</string>
     <string name="stopGame">中止</string>
+    <string name="totalTime">合計時間</string>
+    <string name="notRegisteredRanking">ランキングが登録されていません</string>
 
 </resources>

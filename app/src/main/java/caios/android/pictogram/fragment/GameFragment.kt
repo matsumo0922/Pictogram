@@ -5,13 +5,11 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.util.Size
 import android.view.OrientationEventListener
 import android.view.Surface
 import android.view.View
 import androidx.activity.OnBackPressedCallback
-import androidx.annotation.DrawableRes
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.Preview
@@ -28,10 +26,10 @@ import caios.android.pictogram.data.*
 import caios.android.pictogram.databinding.FragmentGameBinding
 import caios.android.pictogram.dialog.CountdownDialog
 import caios.android.pictogram.dialog.ErrorDialog
+import caios.android.pictogram.game.EventData
 import caios.android.pictogram.global.SettingClass
 import caios.android.pictogram.global.ranking
 import caios.android.pictogram.global.setting
-import caios.android.pictogram.utils.LogUtils
 import caios.android.pictogram.utils.PermissionUtils
 import caios.android.pictogram.utils.autoCleared
 import caios.android.pictogram.view.DebugSurfaceView
@@ -40,7 +38,6 @@ import caios.android.pictogram.view.ResultSurfaceView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.transition.MaterialSharedAxis
 import com.google.common.util.concurrent.ListenableFuture
-import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -56,9 +53,10 @@ class GameFragment: Fragment(R.layout.fragment_game) {
     private lateinit var cameraExecutor: ExecutorService
 
     private var gameTurn = 1
-    private val gameMaxTurn = 5
-    private var gameEventList = mutableListOf<PictogramEvent>()
+    private val gameMaxTurn = 5 //固定
     private var gameTime = 0.0f
+    private var gameLapTime = 0.0f
+    private var gameEventList = mutableListOf<EventData>()
 
     private var isShouldTest = true
     private var stopAnalyzeFlag = false
@@ -126,7 +124,7 @@ class GameFragment: Fragment(R.layout.fragment_game) {
         val randomEventList = eventList.shuffled().take(gameMaxTurn)
 
         gameEventList.clear()
-        gameEventList.addAll(randomEventList)
+        gameEventList.addAll(randomEventList.map { EventData(it) })
     }
 
     private fun setTurn(turn: Int) {
@@ -136,12 +134,12 @@ class GameFragment: Fragment(R.layout.fragment_game) {
 
                 val turnEvent = gameEventList[turn - 1]
 
-                pictogramComparator = PictogramComparator(requireContext(), turnEvent)
+                pictogramComparator = PictogramComparator(requireContext(), turnEvent.event)
 
-                binding.themeSportsText.text = getEventName(turnEvent)
-                binding.pictogramImage.setImageResource(getEventPictogram(turnEvent))
+                binding.themeSportsText.text = getEventName(turnEvent.event)
+                binding.pictogramImage.setImageResource(getEventResource(turnEvent.event))
             } else {
-                val ranking = ranking.setRanking(gameTime, Calendar.getInstance().time.time) ?: -1
+                val ranking = ranking.setRanking(gameEventList)
 
                 findNavController().navigate(GameFragmentDirections.actionGameFragmentToResultFragment(gameTime, ranking))
                 handler.removeCallbacks(timeProcess)
@@ -265,6 +263,8 @@ class GameFragment: Fragment(R.layout.fragment_game) {
                 stopAnalyzeFlag = true
                 binding.clearImage.visibility = View.VISIBLE
 
+                gameEventList.elementAtOrNull(gameTurn)?.time = ((gameTime - gameLapTime) * 1000).toLong()
+
                 handler.postDelayed({
                     binding.clearImage.visibility = View.GONE
                     setTurn(gameTurn + 1)
@@ -311,34 +311,6 @@ class GameFragment: Fragment(R.layout.fragment_game) {
             PictogramEvent.TABLE_TENNIS        -> getString(R.string.tableTennis)
             PictogramEvent.TAEKWONDO           -> getString(R.string.taekwondo)
             PictogramEvent.WRESTLING           -> getString(R.string.wrestling)
-        }
-    }
-
-    @DrawableRes
-    private fun getEventPictogram(event: PictogramEvent): Int {
-        return when(event) {
-            PictogramEvent.ARCHERY             -> R.drawable.vec_archery
-            PictogramEvent.WEIGHTLIFTING       -> R.drawable.vec_weightlifting
-            PictogramEvent.VOLLEYBALL          -> R.drawable.vec_volleyball
-            PictogramEvent.TENNIS              -> R.drawable.vec_tennis
-            PictogramEvent.ATHLETICS           -> R.drawable.vec_athletics
-            PictogramEvent.BADMINTON           -> R.drawable.vec_badminton
-            PictogramEvent.BASKETBALL          -> R.drawable.vec_basketball
-            PictogramEvent.BEACH_VOLLEYBALL    -> R.drawable.vec_beach_volleyball
-            PictogramEvent.BOXING              -> R.drawable.vec_boxing
-            PictogramEvent.CYCLING             -> R.drawable.vec_cycling_road
-            PictogramEvent.DIVING              -> R.drawable.vec_diving
-            PictogramEvent.FENCING             -> R.drawable.vec_fencing
-            PictogramEvent.FOOTBALL            -> R.drawable.vec_football
-            PictogramEvent.GOLF                -> R.drawable.vec_golf
-            PictogramEvent.HANDBALL            -> R.drawable.vec_handball
-            PictogramEvent.HOCKEY              -> R.drawable.vec_hockey
-            PictogramEvent.RHYTHMIC_GYMNASTICS -> R.drawable.vec_rhythmic_gymnastics
-            PictogramEvent.RUGBY               -> R.drawable.vec_rugby_sevens
-            PictogramEvent.SHOOTING            -> R.drawable.vec_shooting
-            PictogramEvent.TABLE_TENNIS        -> R.drawable.vec_table_tennis
-            PictogramEvent.TAEKWONDO           -> R.drawable.vec_taekwondo
-            PictogramEvent.WRESTLING           -> R.drawable.vec_weightlifting
         }
     }
 }

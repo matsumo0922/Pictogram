@@ -12,6 +12,9 @@
         <action
             android:id="@+id/action_startingFragment_to_gameFragment"
             app:destination="@id/gameFragment" />
+        <action
+            android:id="@+id/action_startingFragment_to_rankingFragment"
+            app:destination="@id/rankingFragment" />
     </fragment>
 
     <fragment
@@ -38,6 +41,13 @@
         <argument
             android:name="rank"
             app:argType="integer" />
+        <action
+            android:id="@+id/action_resultFragment_to_rankingFragment"
+            app:destination="@id/rankingFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/rankingFragment"
+        android:name="caios.android.pictogram.fragment.RankingFragment"
+        android:label="RankingFragment" />
 
 </navigation>

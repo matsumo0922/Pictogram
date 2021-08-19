@@ -53,6 +53,10 @@ class StartingFragment: Fragment(R.layout.fragment_starting) {
         binding.settingButton.setOnClickListener {
             startActivity(Intent(requireContext(), SettingActivity::class.java))
         }
+
+        binding.rankingButton.setOnClickListener {
+            findNavController().navigate(R.id.action_startingFragment_to_rankingFragment)
+        }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {

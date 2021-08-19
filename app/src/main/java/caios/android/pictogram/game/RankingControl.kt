@@ -5,47 +5,71 @@ import caios.android.pictogram.data.PictogramEvent
 import caios.android.pictogram.global.setting
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import java.util.*
 
-data class RankingData(
-    val ranking: Int,
-    val time: Float,
+data class ClearData(
     val date: Long,
-    val events: List<PictogramEvent>
-    )
+    val eventData: List<EventData>,
+    var challengerName: String = "Unknown Challenger"
+)
+
+data class EventData(
+    val event: PictogramEvent,
+    var time: Long = -1L
+)
 
 
 class RankingControl(private val context: Context) {
 
     private val gson = Gson()
 
-    fun setRanking(time: Float, date: Long): Int? {
-        val rankingList = getAllRanking().toMutableList()
-        val dataList = rankingList.map { Pair(it.time, it.date) }.toMutableList()
+    fun setRanking(eventDataList: List<EventData>): Int {
+        val clearData = ClearData(Calendar.getInstance().time.time, eventDataList)
+        val ranking = getRanking(clearData)
 
-        dataList.add(time to date)
+        setting.setString(PREFERENCE, clearData.date.toString(), gson.toJson(clearData.eventData))
 
-        val newRankingList = resetRanking(dataList)
-
-        return newRankingList.find { it.date == date }?.ranking
+        return ranking
     }
 
-    fun getAllRanking(): List<RankingData> {
-        val rankingStr = setting.getString(PREFERENCE, "Ranking", "[]")
-        val rankingArray = gson.fromJson<Collection<RankingData>>(rankingStr, object : TypeToken<Collection<RankingData>>(){}.type)
-        return rankingArray.toList()
+    fun getAllData(): List<ClearData> {
+        return setting.getAllPreferenceSpecificItem<String>(PREFERENCE).mapNotNull {
+            it.key.toLongOrNull()?.let { date ->
+                ClearData(date, gson.fromJson<Collection<EventData>>(it.value, object : TypeToken<Collection<EventData>>() {}.type).toList())
+            }
+        }
     }
 
-    private fun resetRanking(dataList: List<Pair<Float, Long>>): List<RankingData> {
-        val sortedList = dataList.sortedBy { it.first }
-        val sortedRankingDataList = sortedList.mapIndexed { index, data -> RankingData(index + 1, data.first, data.second) }
-        val json = gson.toJson(sortedRankingDataList)
+    private fun getData(date: Long): ClearData? {
+        return setting.getStringOrNull(PREFERENCE, date.toString())?.let {
+            ClearData(date, gson.fromJson<Collection<EventData>>(it, object : TypeToken<Collection<EventData>>() {}.type).toList())
+        }
+    }
 
-        setting.setString(PREFERENCE, "Ranking", json)
+    private fun getData(ranking: Int): ClearData? {
+        val allData = getAllData()
+        val sortedList = allData.sortedRanking()
+        return sortedList.elementAtOrNull(ranking - 1)
+    }
 
-        return sortedRankingDataList
+    private fun getRanking(clearData: ClearData): Int {
+        val allData = getAllData().toMutableList()
+
+        if(!allData.contains(clearData)){
+            allData.add(clearData)
+        }
+
+        val sortedList = allData.sortedRanking()
+        return (sortedList.indexOfFirst { it == clearData } + 1)
     }
 
     companion object {
         const val PREFERENCE = "CAIOS-RANKING"
     }
+}
+
+// どうしても拡張関数として使いたいのでグローバル
+fun List<ClearData>.sortedRanking(): List<ClearData> {
+    val addGameTimeList = map { Pair(it, it.eventData.sumOf { event -> event.time }) }
+    return addGameTimeList.sortedBy { it.second }.map { it.first }
 }
