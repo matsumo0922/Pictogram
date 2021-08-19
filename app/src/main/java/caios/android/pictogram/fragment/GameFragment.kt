@@ -162,7 +162,7 @@ class GameFragment: Fragment(R.layout.fragment_game) {
     }
 
     private fun setTestResult(keyPoints: List<KeyPoint>) {
-        if ((setting.getBoolean("DebugMode", false) || keyPoints.size == enumValues<BodyPart>().size) && childFragmentManager.findFragmentByTag("CountdownDialog") == null) {
+        if (( setting.getBoolean("DebugMode", false) || keyPoints.size == enumValues<BodyPart>().size) && childFragmentManager.findFragmentByTag("CountdownDialog") == null) {
             handler.post {
                 CountdownDialog.build(3) {
                     setTurn(gameTurn)
@@ -260,7 +260,7 @@ class GameFragment: Fragment(R.layout.fragment_game) {
 
     @SuppressLint("SetTextI18n")
     private fun frameUpdate(score: Float) {
-        if (score < THRESHOLD_DEGREE_MATCHES) {
+        if (score < THRESHOLD_DEGREE_MATCHES || setting.getBoolean("DebugMode", false)) {
             handler.post {
                 stopAnalyzeFlag = true
                 binding.clearImage.visibility = View.VISIBLE

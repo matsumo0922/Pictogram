@@ -1,9 +1,18 @@
 package caios.android.pictogram.game
 
 import android.content.Context
+import caios.android.pictogram.data.PictogramEvent
 import caios.android.pictogram.global.setting
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+
+data class RankingData(
+    val ranking: Int,
+    val time: Float,
+    val date: Long,
+    val events: List<PictogramEvent>
+    )
+
 
 class RankingControl(private val context: Context) {
 
@@ -35,8 +44,6 @@ class RankingControl(private val context: Context) {
 
         return sortedRankingDataList
     }
-
-    data class RankingData(val ranking: Int, val time: Float, val date: Long)
 
     companion object {
         const val PREFERENCE = "CAIOS-RANKING"

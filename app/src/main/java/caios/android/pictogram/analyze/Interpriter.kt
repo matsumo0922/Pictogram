@@ -43,7 +43,7 @@ abstract class Interpriter(
 
     private fun setUpOption(): Interpreter.Options {
         return Interpreter.Options().apply {
-            setNumThreads(4)
+            setNumThreads(CPU_THREADS)
             when (device) {
                 Device.CPU   -> Unit
                 Device.GPU   -> {
