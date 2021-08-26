@@ -36,11 +36,11 @@
             app:popUpTo="@id/startingFragment"
             app:popUpToInclusive="true"/>
         <argument
-            android:name="time"
-            app:argType="float" />
-        <argument
             android:name="rank"
             app:argType="integer" />
+        <argument
+            android:name="date"
+            app:argType="long" />
         <action
             android:id="@+id/action_resultFragment_to_rankingFragment"
             app:destination="@id/rankingFragment" />

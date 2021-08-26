@@ -65,6 +65,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!--非公開-->
     <ImageButton
         android:id="@+id/rankingButton"
         android:layout_width="32dp"
@@ -73,6 +74,7 @@
         android:layout_marginEnd="16dp"
         android:background="?android:attr/selectableItemBackgroundBorderless"
         android:src="@drawable/vec_trophy"
+        android:visibility="gone"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toStartOf="@+id/settingButton"
         app:layout_constraintTop_toTopOf="parent" />

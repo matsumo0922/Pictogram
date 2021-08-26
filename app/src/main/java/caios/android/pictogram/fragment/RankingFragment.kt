@@ -15,6 +15,9 @@ import caios.android.pictogram.utils.ThemeUtils
 import caios.android.pictogram.utils.autoCleared
 import com.google.android.material.transition.MaterialSharedAxis
 
+// コンテスト時点では使用しないFragment
+// releaseビルドで削除対象のコード
+
 class RankingFragment: Fragment(R.layout.fragment_ranking) {
 
     private var binding by autoCleared<FragmentRankingBinding>()

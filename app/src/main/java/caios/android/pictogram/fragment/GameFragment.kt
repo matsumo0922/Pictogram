@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.util.Size
 import android.view.OrientationEventListener
 import android.view.Surface
@@ -30,6 +31,7 @@ import caios.android.pictogram.game.EventData
 import caios.android.pictogram.global.SettingClass
 import caios.android.pictogram.global.ranking
 import caios.android.pictogram.global.setting
+import caios.android.pictogram.utils.LogUtils.TAG
 import caios.android.pictogram.utils.PermissionUtils
 import caios.android.pictogram.utils.autoCleared
 import caios.android.pictogram.view.DebugSurfaceView
@@ -38,6 +40,7 @@ import caios.android.pictogram.view.ResultSurfaceView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.transition.MaterialSharedAxis
 import com.google.common.util.concurrent.ListenableFuture
+import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -139,9 +142,10 @@ class GameFragment: Fragment(R.layout.fragment_game) {
                 binding.themeSportsText.text = getEventName(turnEvent.event)
                 binding.pictogramImage.setImageResource(getEventResource(turnEvent.event))
             } else {
-                val ranking = ranking.setRanking(gameEventList)
+                val date = Calendar.getInstance().time.time
+                val ranking = ranking.setRanking(gameEventList, date)
 
-                findNavController().navigate(GameFragmentDirections.actionGameFragmentToResultFragment(gameTime, ranking))
+                findNavController().navigate(GameFragmentDirections.actionGameFragmentToResultFragment(ranking, date))
                 handler.removeCallbacks(timeProcess)
             }
         } catch (e: Throwable) {
@@ -261,9 +265,13 @@ class GameFragment: Fragment(R.layout.fragment_game) {
         if (score < THRESHOLD_DEGREE_MATCHES || setting.getBoolean("DebugMode", false)) {
             handler.post {
                 stopAnalyzeFlag = true
-                binding.clearImage.visibility = View.VISIBLE
 
-                gameEventList.elementAtOrNull(gameTurn)?.time = ((gameTime - gameLapTime) * 1000).toLong()
+                Log.d(TAG, "frameUpdate: Event clear. GAMETIME: $gameTime, LAPTIME: $gameLapTime, TIME: ${((gameTime - gameLapTime) * 1000)}")
+
+                gameEventList.elementAtOrNull(gameTurn - 1)?.time = ((gameTime - gameLapTime) * 1000).toLong()
+
+                gameLapTime = gameTime
+                binding.clearImage.visibility = View.VISIBLE
 
                 handler.postDelayed({
                     binding.clearImage.visibility = View.GONE

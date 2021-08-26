@@ -1,12 +1,9 @@
 package caios.android.pictogram.fragment
 
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.navigation.NavDirections
-import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import caios.android.pictogram.R
 import caios.android.pictogram.activity.SettingActivity
@@ -14,7 +11,6 @@ import caios.android.pictogram.databinding.FragmentStartingBinding
 import caios.android.pictogram.utils.PermissionUtils
 import caios.android.pictogram.utils.ToastUtils
 import caios.android.pictogram.utils.autoCleared
-import com.google.android.material.transition.MaterialContainerTransform
 import com.google.android.material.transition.MaterialSharedAxis
 
 class StartingFragment: Fragment(R.layout.fragment_starting) {
@@ -54,6 +50,7 @@ class StartingFragment: Fragment(R.layout.fragment_starting) {
             startActivity(Intent(requireContext(), SettingActivity::class.java))
         }
 
+        // 非公開
         binding.rankingButton.setOnClickListener {
             findNavController().navigate(R.id.action_startingFragment_to_rankingFragment)
         }

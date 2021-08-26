@@ -23,30 +23,38 @@ class RankingControl(private val context: Context) {
 
     private val gson = Gson()
 
-    fun setRanking(eventDataList: List<EventData>): Int {
-        val clearData = ClearData(Calendar.getInstance().time.time, eventDataList)
+    fun setRanking(eventDataList: List<EventData>, date: Long = Calendar.getInstance().time.time): Int {
+        val clearData = ClearData(date, eventDataList)
         val ranking = getRanking(clearData)
 
-        setting.setString(PREFERENCE, clearData.date.toString(), gson.toJson(clearData.eventData))
+        setting.setString(PREFERENCE, clearData.date.toString(), gson.toJson(clearData))
 
         return ranking
+    }
+
+    fun setChallengerName(name: String, date: Long) {
+        val clearData = getData(date)?.apply {
+            challengerName = name
+        } ?: return
+
+        setting.setString(PREFERENCE, clearData.date.toString(), gson.toJson(clearData))
     }
 
     fun getAllData(): List<ClearData> {
         return setting.getAllPreferenceSpecificItem<String>(PREFERENCE).mapNotNull {
             it.key.toLongOrNull()?.let { date ->
-                ClearData(date, gson.fromJson<Collection<EventData>>(it.value, object : TypeToken<Collection<EventData>>() {}.type).toList())
+                gson.fromJson(it.value, object : TypeToken<ClearData>() {}.type)
             }
         }
     }
 
-    private fun getData(date: Long): ClearData? {
+    fun getData(date: Long): ClearData? {
         return setting.getStringOrNull(PREFERENCE, date.toString())?.let {
-            ClearData(date, gson.fromJson<Collection<EventData>>(it, object : TypeToken<Collection<EventData>>() {}.type).toList())
+            gson.fromJson(it, object : TypeToken<ClearData>() {}.type)
         }
     }
 
-    private fun getData(ranking: Int): ClearData? {
+    fun getData(ranking: Int): ClearData? {
         val allData = getAllData()
         val sortedList = allData.sortedRanking()
         return sortedList.elementAtOrNull(ranking - 1)
@@ -68,7 +76,6 @@ class RankingControl(private val context: Context) {
     }
 }
 
-// どうしても拡張関数として使いたいのでグローバル
 fun List<ClearData>.sortedRanking(): List<ClearData> {
     val addGameTimeList = map { Pair(it, it.eventData.sumOf { event -> event.time }) }
     return addGameTimeList.sortedBy { it.second }.map { it.first }

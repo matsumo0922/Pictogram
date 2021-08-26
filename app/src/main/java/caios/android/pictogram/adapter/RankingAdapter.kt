@@ -10,8 +10,6 @@ import caios.android.pictogram.R
 import caios.android.pictogram.data.getEventResource
 import caios.android.pictogram.databinding.ViewRankingListBinding
 import caios.android.pictogram.game.ClearData
-import caios.android.pictogram.game.sortedRanking
-import caios.android.pictogram.global.ranking
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -22,7 +20,7 @@ class RankingAdapter(
     private val dataList: List<Pair<ClearData, Long>>,
 ): RecyclerView.Adapter<RankingHolder>() {
 
-    private val rankingList = dataList.map { it.first }.sortedRanking()
+    private val rankingList = dataList.map { it.first }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RankingHolder {
         return RankingHolder(ViewRankingListBinding.inflate(LayoutInflater.from(parent.context), parent, false))
@@ -53,23 +51,23 @@ class RankingAdapter(
             when(val ranking = rankingList.indexOfFirst { it == clearData } + 1) {
                 1 -> {
                     binding.medalImage.setImageResource(R.drawable.vec_medal_gold)
-                    binding.rankingLayout.visibility = View.GONE
+                    binding.rankingLayout.visibility = View.INVISIBLE
                     binding.medalImage.visibility = View.VISIBLE
                 }
                 2 -> {
-                    binding.medalImage.setImageResource(R.drawable.ic_medal_silver)
-                    binding.rankingLayout.visibility = View.GONE
+                    binding.medalImage.setImageResource(R.drawable.vec_medal_silver)
+                    binding.rankingLayout.visibility = View.INVISIBLE
                     binding.medalImage.visibility = View.VISIBLE
                 }
                 3 -> {
                     binding.medalImage.setImageResource(R.drawable.vec_medal_bronze)
-                    binding.rankingLayout.visibility = View.GONE
+                    binding.rankingLayout.visibility = View.INVISIBLE
                     binding.medalImage.visibility = View.VISIBLE
                 }
                 else -> {
                     binding.ranking.text = ranking.toString()
                     binding.rankingLayout.visibility = View.VISIBLE
-                    binding.medalImage.visibility = View.GONE
+                    binding.medalImage.visibility = View.INVISIBLE
                 }
             }
         }

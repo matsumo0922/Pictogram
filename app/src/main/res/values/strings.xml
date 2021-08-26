@@ -83,5 +83,8 @@
     <string name="stopGame">中止</string>
     <string name="totalTime">合計時間</string>
     <string name="notRegisteredRanking">ランキングが登録されていません</string>
+    <string name="editName">名前を編集</string>
+    <string name="editNameSum">ランキング画面に表示させる名前を入力してください。個人情報や他人を不快にさせる内容等は入力しないでください。</string>
+    <string name="name">名前</string>
 
 </resources>

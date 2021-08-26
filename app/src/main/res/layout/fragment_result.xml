@@ -2,79 +2,255 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:background="@color/colorAccent"
+        app:layout_constraintStart_toEndOf="@id/guideline"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:id="@+id/clearTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="16dp"
+            android:gravity="center"
+            android:text="@string/gameClear"
+            android:textColor="@color/colorNightPrimaryText"
+            android:textSize="48sp"
+            android:textStyle="bold|italic"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/clearTime"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="16dp"
+            android:gravity="center"
+            android:text="@string/clearTime"
+            android:textColor="@color/colorNightPrimaryText"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/clearTitle" />
+
+        <TextView
+            android:id="@+id/ranking"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:gravity="center"
+            android:text="@string/ranking"
+            android:textColor="@color/colorNightPrimaryText"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/clearTime" />
+
+        <ImageView
+            android:id="@+id/eventImage1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="16dp"
+            android:adjustViewBounds="true"
+            android:src="@drawable/vec_athletics"
+            app:layout_constraintBottom_toTopOf="@+id/endButton"
+            app:layout_constraintDimensionRatio="w:1:1"
+            app:layout_constraintEnd_toStartOf="@id/eventImage2"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ranking" />
+
+        <ImageView
+            android:id="@+id/eventImage2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:adjustViewBounds="true"
+            android:src="@drawable/vec_football"
+            app:layout_constraintBottom_toTopOf="@+id/endButton"
+            app:layout_constraintDimensionRatio="w:1:1"
+            app:layout_constraintEnd_toStartOf="@+id/eventImage3"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@+id/eventImage1"
+            app:layout_constraintTop_toBottomOf="@+id/ranking" />
+
+        <ImageView
+            android:id="@+id/eventImage3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:adjustViewBounds="true"
+            android:src="@drawable/vec_rhythmic_gymnastics"
+            app:layout_constraintBottom_toTopOf="@+id/endButton"
+            app:layout_constraintDimensionRatio="w:1:1"
+            app:layout_constraintEnd_toStartOf="@+id/eventImage4"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@+id/eventImage2"
+            app:layout_constraintTop_toBottomOf="@+id/ranking" />
+
+        <ImageView
+            android:id="@+id/eventImage4"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:adjustViewBounds="true"
+            android:src="@drawable/vec_badminton"
+            app:layout_constraintBottom_toTopOf="@+id/endButton"
+            app:layout_constraintDimensionRatio="w:1:1"
+            app:layout_constraintEnd_toStartOf="@+id/eventImage5"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@+id/eventImage3"
+            app:layout_constraintTop_toBottomOf="@+id/ranking" />
+
+        <ImageView
+            android:id="@+id/eventImage5"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:adjustViewBounds="true"
+            android:src="@drawable/vec_beach_volleyball"
+            app:layout_constraintBottom_toTopOf="@+id/endButton"
+            app:layout_constraintDimensionRatio="w:1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@id/eventImage4"
+            app:layout_constraintTop_toBottomOf="@+id/ranking" />
+
+        <TextView
+            android:id="@+id/eventTime1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:gravity="center"
+            android:text="16s"
+            android:textColor="@color/colorNightPrimaryText"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="@id/eventImage1"
+            app:layout_constraintStart_toStartOf="@id/eventImage1"
+            app:layout_constraintTop_toBottomOf="@id/eventImage1" />
+
+        <TextView
+            android:id="@+id/eventTime2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:gravity="center"
+            android:text="16s"
+            android:textColor="@color/colorNightPrimaryText"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="@id/eventImage2"
+            app:layout_constraintStart_toStartOf="@id/eventImage2"
+            app:layout_constraintTop_toBottomOf="@id/eventImage2" />
+
+        <TextView
+            android:id="@+id/eventTime3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:gravity="center"
+            android:text="16s"
+            android:textColor="@color/colorNightPrimaryText"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="@id/eventImage3"
+            app:layout_constraintStart_toStartOf="@id/eventImage3"
+            app:layout_constraintTop_toBottomOf="@id/eventImage3" />
+
+        <TextView
+            android:id="@+id/eventTime4"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:gravity="center"
+            android:text="16s"
+            android:textColor="@color/colorNightPrimaryText"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="@id/eventImage4"
+            app:layout_constraintStart_toStartOf="@id/eventImage4"
+            app:layout_constraintTop_toBottomOf="@id/eventImage4" />
+
+        <TextView
+            android:id="@+id/eventTime5"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:gravity="center"
+            android:text="16s"
+            android:textColor="@color/colorNightPrimaryText"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="@id/eventImage5"
+            app:layout_constraintStart_toStartOf="@id/eventImage5"
+            app:layout_constraintTop_toBottomOf="@id/eventImage5" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/editNameButton"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="24dp"
+            android:backgroundTint="@color/colorAccentLight"
+            android:text="@string/editName"
+            android:textColor="@color/colorNightPrimaryText"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/endButton"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/endButton"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="24dp"
+            android:backgroundTint="@color/colorAccentLight"
+            android:text="@string/backToTitle"
+            android:textColor="@color/colorNightPrimaryText"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/editNameButton" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <nl.dionsegijn.konfetti.KonfettiView
         android:id="@+id/confettiView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <TextView
-        android:id="@+id/clearText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:gravity="center"
-        android:text="@string/gameClear"
-        android:textColor="@color/colorPrimaryText"
-        android:textSize="44sp"
-        android:textStyle="bold"
-        android:clickable="true"
-        android:focusable="true"
-        app:layout_constraintVertical_chainStyle="packed"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/timeText"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/timeText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="24dp"
-        android:gravity="center"
-        android:text="@string/clearTime"
-        android:textColor="@color/colorPrimaryText"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@id/rankingText"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/clearText" />
-
-    <TextView
-        android:id="@+id/rankingText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="24dp"
-        android:gravity="center"
-        android:text="@string/ranking"
-        android:textColor="@color/colorPrimaryText"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/timeText" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/endButton"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="24dp"
-        android:backgroundTint="@color/colorAccent"
-        android:text="@string/backToTitle"
-        android:textColor="@color/colorNightPrimaryText"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="-52dp"
+        tools:layout_editor_absoluteY="0dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
