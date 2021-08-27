@@ -9,7 +9,7 @@
     <string name="systemTheme">システムのデフォルト</string>
     <string name="unknown">不明</string>
     <string name="startGame">ゲームスタート</string>
-    <string name="explainRule">ルール説明</string>
+    <string name="explainGame">ゲーム説明</string>
     <string name="gameSummary">ピクトグラムになりきってハイスコアを目指そう！！</string>
     <string name="permissionReject">許可されませんでした</string>
     <string name="requirePermission">アプリを使用するにはカメラの権限が必要です</string>
@@ -86,5 +86,16 @@
     <string name="editName">名前を編集</string>
     <string name="editNameSum">ランキング画面に表示させる名前を入力してください。個人情報や他人を不快にさせる内容等は入力しないでください。</string>
     <string name="name">名前</string>
+    <string name="ruleSummary">このゲームは、次々に表示されるオリンピック競技のピクトグラムになりきるゲームです。お題は5問出題され、出題される競技、順番は完全にランダムです。できるだけ早く、正確になりきってハイスコアを目指そう！</string>
+    <string name="rule1Prepare">1. 準備</string>
+    <string name="rule1PrepareSum">① ゲーム開始ボタンを押したら、スマートフォンを安定した場所に垂直にして置いてください\n② 画面に表示されている映像を確認しながら全身が映るように調整しましょう\n③ 全身が映ると自動的にゲームがスタートします</string>
+    <string name="rule2Game">2. ゲーム</string>
+    <string name="rule2GameSum">① 右側にお題が表示されるので、（選手になったつもりで）マネをしましょう\n② ゲームのAIが「これは似ているな」と判断したらクリアとなり、次のお題が表示されます\n③ お題は全5問で、すべてクリアするまでに要した時間をスコアとします</string>
+    <string name="rule3Result">3. リザルト</string>
+    <string name="rule3ResultSum">① ゲームが終わるとリザルト画面が表示されます\n② 右側に今回のスコアと順位、左側に今までプレイしたゲームのスコアがランキング形式で表示されます\n ③ 「名前を変更」を押すと、今回ゲームをプレイした人の名前をつけられます</string>
+    <string name="ruleSideNote">ちなみに、このゲームは東京オリンピック開会式で披露された「ピクトグラムパフォーマンス」にインスパイアされて作成されたものです。このゲームを使えば、誰でもあのパフォーマンスのようにピクトグラムになりきれます。</string>
+    <string name="seePictogramPerformance">ピクトグラムパフォーマンスを見る</string>
+    <string name="judgeAccuracy">判定精度</string>
+    <string name="judgeAccuracySum">「ピクトグラムと似ている」と判定する精度のしきい値を設定します。精度が高いほど、忠実にピクトグラムを再現しなければいけないため、ゲーム難易度が上がります。</string>
 
 </resources>

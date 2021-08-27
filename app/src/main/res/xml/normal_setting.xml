@@ -12,6 +12,11 @@
             android:title="@string/estimatedAccuracy"
             android:summary="@string/estimatedAccuracySum" />
 
+        <Preference
+            android:key="JudgeAccuracy"
+            android:title="@string/judgeAccuracy"
+            android:summary="@string/judgeAccuracySum" />
+
         <SwitchPreference
             android:key="PreviewCamera"
             android:title="@string/previewCamera"

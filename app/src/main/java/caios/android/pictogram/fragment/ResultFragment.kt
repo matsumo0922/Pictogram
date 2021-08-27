@@ -89,11 +89,13 @@ class ResultFragment: Fragment(R.layout.fragment_result) {
             findNavController().navigate(R.id.action_resultFragment_to_startingFragment)
         }
 
-        (activity as MainActivity).onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
+        (activity as MainActivity).onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 findNavController().navigate(R.id.action_resultFragment_to_startingFragment)
+                remove()
             }
         })
+
     }
 
     override fun onResume() {

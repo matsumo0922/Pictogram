@@ -51,9 +51,10 @@ class GameFragment: Fragment(R.layout.fragment_game) {
 
     private lateinit var postureSurfaceView: ResultSurfaceView
     private lateinit var pictogramComparator: PictogramComparator
-
     private lateinit var cameraProviderFuture: ListenableFuture<ProcessCameraProvider>
-    private lateinit var cameraExecutor: ExecutorService
+
+    private var cameraExecutor: ExecutorService? = null
+    private val judgeAccuracyThreshold = setting.getFloat(SettingClass.JUDGE_ACCURACY_THRESHOLD, 1.90f)
 
     private var gameTurn = 1
     private val gameMaxTurn = 5 //固定
@@ -63,6 +64,23 @@ class GameFragment: Fragment(R.layout.fragment_game) {
 
     private var isShouldTest = true
     private var stopAnalyzeFlag = false
+
+    private val backPressedCallback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            MaterialAlertDialogBuilder(requireContext()).apply {
+                setTitle(R.string.caution)
+                setMessage(R.string.cancelGameMessage)
+                setPositiveButton(R.string.stopGame) { _, _ ->
+                    stopAnalyzeFlag = true
+                    handler.removeCallbacks(timeProcess)
+
+                    findNavController().popBackStack()
+                    remove()
+                }
+                setNegativeButton(R.string.continueGame, null)
+            }.show()
+        }
+    }
 
     private val timeProcess = object : Runnable {
 
@@ -100,26 +118,29 @@ class GameFragment: Fragment(R.layout.fragment_game) {
         if(PermissionUtils.isAllowed(requireContext(), PermissionUtils.requestPermissions)) setupCamera()
         else findNavController().navigateUp()
 
-        (activity as MainActivity).onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                MaterialAlertDialogBuilder(requireContext()).apply {
-                    setTitle(R.string.caution)
-                    setMessage(R.string.cancelGameMessage)
-                    setPositiveButton(R.string.stopGame) { _, _ ->
-                        stopAnalyzeFlag = true
-                        handler.removeCallbacks(timeProcess)
+        (activity as MainActivity).onBackPressedDispatcher.addCallback(viewLifecycleOwner, backPressedCallback)
 
-                        findNavController().popBackStack()
-                    }
-                    setNegativeButton(R.string.continueGame, null)
-                }.show()
-            }
-        })
+        binding.skipButton.setOnClickListener {
+            if(isShouldTest || stopAnalyzeFlag) return@setOnClickListener
+
+            val eventList = enumValues<PictogramEvent>().toMutableList().filter { it !in pictogramEventDisables && it !in gameEventList.map { data -> data.event } }
+            val randomEvent = eventList.shuffled()[0]
+
+            gameEventList[gameTurn - 1].event = randomEvent
+
+            binding.themeSportsText.text = getEventName(randomEvent)
+            binding.pictogramImage.setImageResource(getEventResource(randomEvent))
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        backPressedCallback.remove()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        cameraExecutor.shutdown()
+        cameraExecutor?.shutdown()
     }
 
     private fun initGame() {
@@ -164,7 +185,7 @@ class GameFragment: Fragment(R.layout.fragment_game) {
     }
 
     private fun setTestResult(keyPoints: List<KeyPoint>) {
-        if (( setting.getBoolean("DebugMode", false) || keyPoints.size == enumValues<BodyPart>().size) && childFragmentManager.findFragmentByTag("CountdownDialog") == null) {
+        if ((setting.getBoolean("DebugMode", false) || keyPoints.size == enumValues<BodyPart>().size) && childFragmentManager.findFragmentByTag("CountdownDialog") == null) {
             handler.post {
                 CountdownDialog.build(3) {
                     setTurn(gameTurn)
@@ -230,7 +251,7 @@ class GameFragment: Fragment(R.layout.fragment_game) {
             setTargetRotation(binding.previewView.display.rotation)
             setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
         }.build().also {
-            it.setAnalyzer(cameraExecutor, PostureEstimator(requireContext(), mlModel, processingMethod, estimationListener))
+            it.setAnalyzer(cameraExecutor!!, PostureEstimator(requireContext(), mlModel, processingMethod, estimationListener))
         }
 
         val orientationEventListener = object : OrientationEventListener(requireContext()) {
@@ -262,7 +283,7 @@ class GameFragment: Fragment(R.layout.fragment_game) {
 
     @SuppressLint("SetTextI18n")
     private fun frameUpdate(score: Float) {
-        if (score < THRESHOLD_DEGREE_MATCHES || setting.getBoolean("DebugMode", false)) {
+        if (score < judgeAccuracyThreshold || setting.getBoolean("DebugMode", false)) {
             handler.post {
                 stopAnalyzeFlag = true
 

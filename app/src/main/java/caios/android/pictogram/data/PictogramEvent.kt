@@ -87,7 +87,9 @@ fun getEventName(event: PictogramEvent): String {
 // 判定精度や人体の構造的に無理なやつを除く（せっかく準備したけど）
 val pictogramEventDisables = listOf(
     PictogramEvent.TENNIS,
-    PictogramEvent.BEACH_VOLLEYBALL,
+    PictogramEvent.DIVING,
+    PictogramEvent.RHYTHMIC_GYMNASTICS,
     PictogramEvent.RUGBY,
+    PictogramEvent.SHOOTING,
     PictogramEvent.WRESTLING
 )

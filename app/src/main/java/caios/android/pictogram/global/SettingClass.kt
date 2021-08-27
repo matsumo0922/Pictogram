@@ -218,6 +218,7 @@ class SettingClass(private val context: Context) {
         const val THEME_APPLICATION = "ThemeApplication"
         const val ML_MODEL = "MLModel"
         const val PROCESSING_METHOD = "ProcessingMethod"
+        const val JUDGE_ACCURACY_THRESHOLD = "JudgeAccuracyThreshold"
         const val IS_ENABLE_DEVELOPER_MODE = "isEnableDeveloperMode"
         const val IS_ENABLE_PREMIUM_MODE = "isEnablePremiumMode"
     }

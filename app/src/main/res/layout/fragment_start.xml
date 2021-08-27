@@ -136,7 +136,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="96dp"
         android:backgroundTint="@color/colorAccent"
-        android:text="@string/explainRule"
+        android:text="@string/explainGame"
         android:textColor="@color/colorNightPrimaryText"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"

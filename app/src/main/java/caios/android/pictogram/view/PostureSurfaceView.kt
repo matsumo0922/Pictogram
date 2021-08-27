@@ -96,11 +96,12 @@ class PostureSurfaceView(surfaceView: SurfaceView) : ResultSurfaceView(surfaceVi
         val radius = distanceList.take(2).average().toFloat() * 1.2f
 
         canvas?.drawCircle(center.x.toFloat(), center.y.toFloat(), radius, paint)
-        canvas?.drawCircle(center.x.toFloat(), center.y.toFloat(), 12f, Paint().apply { color = Color.RED })
 
-        for (part in faceParts) {
+        //canvas?.drawCircle(center.x.toFloat(), center.y.toFloat(), 12f, Paint().apply { color = Color.RED })
+
+        /*for (part in faceParts) {
             canvas?.drawCircle(part.position.x.toFloat(), part.position.y.toFloat(), 12f, Paint().apply { color = Color.BLUE })
-        }
+        }*/
 
         return radius
     }

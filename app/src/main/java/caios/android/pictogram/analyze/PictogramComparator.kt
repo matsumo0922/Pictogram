@@ -81,7 +81,7 @@ class PictogramComparator(
 
         val average = (scoreSum / scoreCount).coerceAtMost(10f)
 
-        if(average != 10f) {
+        if(average < 10f) {
             Log.d(TAG, "comparate: SCORE=$average, SUM=$scoreSum, COUNT=$scoreCount")
         }
 

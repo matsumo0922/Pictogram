@@ -24,7 +24,5 @@ enum class Model {
     MOVENET_LIGHTNING, MOVENET_THUNDER, POSENET
 }
 
-const val THRESHOLD_DEGREE_MATCHES = 1.75f
-
 const val MODEL_WIDTH = 257
 const val MODEL_HEIGHT = 257

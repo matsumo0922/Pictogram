@@ -20,8 +20,6 @@ class RankingAdapter(
     private val dataList: List<Pair<ClearData, Long>>,
 ): RecyclerView.Adapter<RankingHolder>() {
 
-    private val rankingList = dataList.map { it.first }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RankingHolder {
         return RankingHolder(ViewRankingListBinding.inflate(LayoutInflater.from(parent.context), parent, false))
     }
@@ -48,7 +46,7 @@ class RankingAdapter(
             binding.totalTime.text = "%.2f".format(data.second.toFloat() / 1000)
             binding.date.text = SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault()).format(Date(clearData.date))
 
-            when(val ranking = rankingList.indexOfFirst { it == clearData } + 1) {
+            when(val ranking = dataList.indexOfFirst { it.first == clearData } + 1) {
                 1 -> {
                     binding.medalImage.setImageResource(R.drawable.vec_medal_gold)
                     binding.rankingLayout.visibility = View.INVISIBLE

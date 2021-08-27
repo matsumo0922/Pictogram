@@ -7,15 +7,18 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import caios.android.pictogram.R
 import caios.android.pictogram.activity.SettingActivity
-import caios.android.pictogram.databinding.FragmentStartingBinding
+import caios.android.pictogram.data.PictogramEvent
+import caios.android.pictogram.data.getEventResource
+import caios.android.pictogram.databinding.FragmentStartBinding
+import caios.android.pictogram.dialog.RuleDialog
 import caios.android.pictogram.utils.PermissionUtils
 import caios.android.pictogram.utils.ToastUtils
 import caios.android.pictogram.utils.autoCleared
 import com.google.android.material.transition.MaterialSharedAxis
 
-class StartingFragment: Fragment(R.layout.fragment_starting) {
+class StartFragment: Fragment(R.layout.fragment_start) {
 
-    private var binding by autoCleared<FragmentStartingBinding>()
+    private var binding by autoCleared<FragmentStartBinding>()
     private var permissionRequestCount = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,7 +37,7 @@ class StartingFragment: Fragment(R.layout.fragment_starting) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        binding = FragmentStartingBinding.bind(view)
+        binding = FragmentStartBinding.bind(view)
 
         binding.startButton.setOnClickListener {
             if(requirePermission()) {
@@ -43,7 +46,7 @@ class StartingFragment: Fragment(R.layout.fragment_starting) {
         }
 
         binding.ruleButton.setOnClickListener {
-
+            RuleDialog.build().show(childFragmentManager, null)
         }
 
         binding.settingButton.setOnClickListener {
@@ -54,6 +57,11 @@ class StartingFragment: Fragment(R.layout.fragment_starting) {
         binding.rankingButton.setOnClickListener {
             findNavController().navigate(R.id.action_startingFragment_to_rankingFragment)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        setWelcomePictogram()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -78,6 +86,13 @@ class StartingFragment: Fragment(R.layout.fragment_starting) {
             return false
         } else {
             return  true
+        }
+    }
+
+    private fun setWelcomePictogram() {
+        enumValues<PictogramEvent>().toMutableList().shuffled().also {
+            binding.pictogramMainImage.setImageResource(getEventResource(it.elementAtOrNull(0) ?: return))
+            binding.pictogramSubImage.setImageResource(getEventResource(it.elementAtOrNull(1) ?: return))
         }
     }
 

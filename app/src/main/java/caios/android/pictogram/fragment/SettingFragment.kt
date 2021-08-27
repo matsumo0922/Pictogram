@@ -10,6 +10,7 @@ import caios.android.pictogram.R
 import caios.android.pictogram.activity.SettingActivity
 import caios.android.pictogram.data.Device
 import caios.android.pictogram.data.Model
+import caios.android.pictogram.global.SettingClass.Companion.JUDGE_ACCURACY_THRESHOLD
 import caios.android.pictogram.global.SettingClass.Companion.ML_MODEL
 import caios.android.pictogram.global.SettingClass.Companion.PROCESSING_METHOD
 import caios.android.pictogram.global.setting
@@ -39,6 +40,7 @@ class SettingFragment: PreferenceFragmentCompat() {
 
         val processingMethod = preferenceManager.findPreference<Preference>("ProcessingMethod")
         val mlModel = preferenceManager.findPreference<Preference>("MLModel")
+        val judgeAccuracy = preferenceManager.findPreference<Preference>("JudgeAccuracy")
         val openSourceLicense = preferenceManager.findPreference<Preference>("OpenSourceLicense")
         val version = preferenceManager.findPreference<Preference>("Version")
 
@@ -104,6 +106,30 @@ class SettingFragment: PreferenceFragmentCompat() {
                                 setting.setString(PROCESSING_METHOD, Device.CPU.name)
                                 ToastUtils.show(requireContext(), R.string.changeMethodByMiddleAccuracyModel)
                             }
+                        }
+                    }
+                }
+            }.show()
+
+            return@setOnPreferenceClickListener true
+        }
+
+        judgeAccuracy?.setOnPreferenceClickListener {
+            var checked = -1
+            val selected = setting.getFloat(JUDGE_ACCURACY_THRESHOLD, 1.90f)
+            val itemMap = mutableMapOf(
+                1.75f to getString(R.string.highAccuracy),
+                1.90f to getString(R.string.middleAccuracy),
+                2.20f to getString(R.string.lowAccuracy)
+            )
+
+            MaterialAlertDialogBuilder(requireContext()).apply {
+                setTitle(R.string.judgeAccuracy)
+                setSingleChoiceItems(itemMap.values.toTypedArray(), itemMap.keys.indexOf(selected)) { _, which -> checked = which }
+                setPositiveButton("OK") { _, _ ->
+                    itemMap.keys.toList().elementAtOrNull(checked)?.let { item ->
+                        if(selected != item) {
+                            setting.setFloat(JUDGE_ACCURACY_THRESHOLD, item)
                         }
                     }
                 }

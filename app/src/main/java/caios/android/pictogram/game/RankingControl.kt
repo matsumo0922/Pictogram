@@ -14,7 +14,7 @@ data class ClearData(
 )
 
 data class EventData(
-    val event: PictogramEvent,
+    var event: PictogramEvent,
     var time: Long = -1L
 )
 
